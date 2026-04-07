@@ -76,7 +76,7 @@
     border-color: #1565c0;
     color: #fff;
   }
-  .mode-btn.active:hover { background: #1976d2; }
+  .mode-btn.active { pointer-events: none; }
 
   /* Thumbs down overlay */
   #thumbs-down {
@@ -161,7 +161,7 @@ const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 const hint = document.getElementById('hint');
 const letter = document.getElementById('letter');
-const modeBtn = document.getElementById('mode-btn');
+const modeBtns = document.querySelectorAll('.mode-btn');
 const thumbsDown = document.getElementById('thumbs-down');
 
 let lastColor = '';
@@ -336,7 +336,7 @@ function showThumbsDown() {
 // --- Mode toggle ---
 function setMode(newMode) {
   mode = newMode;
-  modeBtn.textContent = mode === 'freeplay' ? 'Free Play' : 'Quiz';
+  modeBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
   thumbsDown.style.display = 'none';
   quizLocked = false;
 
@@ -351,9 +351,11 @@ function setMode(newMode) {
   }
 }
 
-modeBtn.addEventListener('click', function() {
-  setMode(mode === 'freeplay' ? 'quiz' : 'freeplay');
-  modeBtn.blur();
+modeBtns.forEach(btn => {
+  btn.addEventListener('click', function() {
+    setMode(btn.dataset.mode);
+    btn.blur();
+  });
 });
 
 // --- Keydown handler ---

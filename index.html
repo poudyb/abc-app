@@ -481,7 +481,12 @@ function startChaseRound() {
   speakChar(chaseTarget);
   clearInterval(chaseRepeatId);
   chaseRepeatId = setInterval(() => {
-    if (!chasePaused) speakChar(chaseTarget);
+    if (!chasePaused) {
+      const text = NUMBER_WORDS[chaseTarget] || chaseTarget.toLowerCase();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.9;
+      speechSynthesis.speak(u);
+    }
   }, 5000);
 }
 

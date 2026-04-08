@@ -507,6 +507,30 @@ function animateChase(timestamp) {
       c.el.style.left = c.x + 'px';
       c.el.style.top = c.y + 'px';
     });
+
+    // Character-to-character collisions
+    for (let i = 0; i < chaseChars.length; i++) {
+      for (let j = i + 1; j < chaseChars.length; j++) {
+        const a = chaseChars[i], b = chaseChars[j];
+        const overlapX = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+        const overlapY = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+        if (overlapX > 0 && overlapY > 0) {
+          if (overlapX < overlapY) {
+            const half = overlapX / 2;
+            if (a.x < b.x) { a.x -= half; b.x += half; }
+            else { a.x += half; b.x -= half; }
+            const tmp = a.vx; a.vx = b.vx; b.vx = tmp;
+          } else {
+            const half = overlapY / 2;
+            if (a.y < b.y) { a.y -= half; b.y += half; }
+            else { a.y += half; b.y -= half; }
+            const tmp = a.vy; a.vy = b.vy; b.vy = tmp;
+          }
+          a.el.style.left = a.x + 'px'; a.el.style.top = a.y + 'px';
+          b.el.style.left = b.x + 'px'; b.el.style.top = b.y + 'px';
+        }
+      }
+    }
   }
 
   chaseAnimId = requestAnimationFrame(animateChase);

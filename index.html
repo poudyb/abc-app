@@ -48,22 +48,35 @@
   }
 
   .game-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
-    gap: clamp(1rem, 4vw, 1.5rem);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: clamp(0.65rem, 2vw, 1.15rem);
     width: 100%;
-    max-width: 720px;
+    max-width: min(1080px, 100%);
+    margin-inline: auto;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+    padding-bottom: 6px;
   }
 
   .game-tile {
     container-type: inline-size;
+    flex: 1 1 0;
+    align-self: stretch;
+    min-width: min(260px, 85vw);
+    max-width: 340px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: clamp(1.25rem, 4vw, 1.75rem);
-    border-radius: 28px;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding: clamp(0.85rem, 2.8vw, 1.25rem);
+    border-radius: 22px;
     text-decoration: none;
     color: inherit;
     background: linear-gradient(145deg, #fff9c4 0%, #ffecb3 40%, #ffab91 100%);
@@ -91,11 +104,27 @@
       0 8px 16px rgba(0, 0, 0, 0.18);
   }
 
+  /* Art grows to fill space above titles (equal tile heights); emoji scale with tile width */
   .game-tile__art {
-    font-size: clamp(4rem, 18vw, 5.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 0;
+    min-height: clamp(4.25rem, 24vw, 6.25rem);
+    width: 100%;
+    box-sizing: border-box;
+    font-size: clamp(2rem, 11vw, 3.35rem);
     line-height: 1;
-    filter: drop-shadow(0 4px 0 rgba(230, 81, 0, 0.35));
+    overflow: hidden;
+    filter: drop-shadow(0 3px 0 rgba(230, 81, 0, 0.32));
     animation: tile-wiggle 2.5s ease-in-out infinite;
+  }
+
+  @supports (font-size: 1cqi) {
+    .game-tile__art {
+      min-height: clamp(4.25rem, 42cqi, 7.5rem);
+      font-size: clamp(2rem, 26cqi, 3.5rem);
+    }
   }
 
   .game-tile__art--letters {
@@ -103,11 +132,17 @@
     align-items: center;
     justify-content: center;
     flex-wrap: nowrap;
-    gap: 0.06em;
+    gap: 0.08em;
     font-family: "Fredoka", system-ui, sans-serif;
     font-weight: 800;
-    font-size: clamp(2.45rem, 11vw, 3.85rem);
+    font-size: clamp(1.75rem, 10vw, 3rem);
     animation: tile-wiggle-letters 2.5s ease-in-out infinite;
+  }
+
+  @supports (font-size: 1cqi) {
+    .game-tile__art--letters {
+      font-size: clamp(1.75rem, 22cqi, 3.1rem);
+    }
   }
 
   @keyframes tile-wiggle-letters {
@@ -144,17 +179,19 @@
   }
 
   @keyframes tile-wiggle {
-    0%, 100% { transform: rotate(-3deg) scale(1); }
-    50% { transform: rotate(3deg) scale(1.05); }
+    0%, 100% { transform: rotate(-2deg) scale(1); }
+    50% { transform: rotate(2deg) scale(1.03); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .game-tile__art { animation: none; }
+    .game-tile__art,
+    .game-tile__art--letters { animation: none; }
     .game-tile { transition: none; }
     .game-tile:hover { transform: none; }
   }
 
   .game-tile__label {
+    margin-top: auto;
     display: block;
     width: 90%;
     max-width: 90%;
@@ -167,7 +204,7 @@
     text-align: center;
     text-wrap: balance;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-    font-size: clamp(1.05rem, 4.6vw, 1.85rem);
+    font-size: clamp(0.92rem, 3.8vw, 1.45rem);
   }
 
   .game-tile__hint {
@@ -176,7 +213,7 @@
     max-width: 90%;
     margin-inline: auto;
     box-sizing: border-box;
-    font-size: clamp(0.92rem, 3.9vw, 1.22rem);
+    font-size: clamp(0.8rem, 3.1vw, 1.05rem);
     font-weight: 600;
     line-height: 1.35;
     text-align: center;
@@ -187,11 +224,11 @@
 
   @supports (font-size: 1cqi) {
     .game-tile__label {
-      font-size: clamp(1rem, 10cqi, 1.9rem);
+      font-size: clamp(0.92rem, 8.5cqi, 1.45rem);
     }
 
     .game-tile__hint {
-      font-size: clamp(0.88rem, 8.2cqi, 1.25rem);
+      font-size: clamp(0.8rem, 6.8cqi, 1.05rem);
     }
   }
 
@@ -227,9 +264,61 @@
       0 8px 16px rgba(0, 0, 0, 0.18);
   }
 
+  .game-tile--shapes {
+    background: linear-gradient(145deg, #ede7f6 0%, #ce93d8 42%, #7e57c2 100%);
+    box-shadow:
+      0 8px 0 #5e35b1,
+      0 14px 28px rgba(0, 0, 0, 0.2);
+  }
+
+  .game-tile--shapes .game-tile__art {
+    filter: drop-shadow(0 4px 0 rgba(94, 53, 177, 0.4));
+  }
+
+  .game-tile__art--shapes-icons {
+    flex-wrap: wrap;
+    align-content: center;
+    column-gap: clamp(0.45rem, 5.5vw, 1rem);
+    row-gap: clamp(0.35rem, 3vw, 0.65rem);
+  }
+
+  .game-tile__art--shapes-icons .game-tile__art__shape {
+    display: inline-flex;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  @supports (font-size: 1cqi) {
+    .game-tile__art--shapes-icons {
+      column-gap: clamp(0.45rem, 5.5cqi, 1rem);
+      row-gap: clamp(0.35rem, 3.5cqi, 0.65rem);
+    }
+  }
+
+  .game-tile--shapes .game-tile__label {
+    color: #4a148c;
+  }
+
+  .game-tile--shapes .game-tile__hint {
+    color: #6a1b9a;
+    opacity: 0.95;
+  }
+
+  .game-tile--shapes:hover {
+    box-shadow:
+      0 12px 0 #5e35b1,
+      0 18px 32px rgba(0, 0, 0, 0.22);
+  }
+
+  .game-tile--shapes:active {
+    box-shadow:
+      0 4px 0 #5e35b1,
+      0 8px 16px rgba(0, 0, 0, 0.18);
+  }
+
   .parent-panel {
     width: 100%;
-    max-width: 720px;
+    max-width: min(1080px, 100%);
     margin-bottom: clamp(1rem, 4vw, 1.5rem);
     padding: clamp(0.65rem, 2.5vw, 0.85rem) clamp(0.85rem, 2.5vw, 1rem);
     border-radius: 16px;
@@ -349,6 +438,15 @@
       <span class="game-tile__label">Learn Animals and Sounds</span>
       <span class="game-tile__hint">Roars, chirps and more!</span>
     </a>
+    <a class="game-tile game-tile--shapes" href="shapes.html" id="tile-shapes">
+      <span class="game-tile__art game-tile__art--shapes-icons" aria-hidden="true">
+        <span class="game-tile__art__shape">🔴</span>
+        <span class="game-tile__art__shape">🟦</span>
+        <span class="game-tile__art__shape">⭐</span>
+      </span>
+      <span class="game-tile__label">Learn Shapes and Colors</span>
+      <span class="game-tile__hint">Circles, squares, and more!</span>
+    </a>
   </div>
 </main>
 <script>
@@ -357,6 +455,8 @@
   var ALPHABET_STATS_KEY = 'ariaAlphabetStats';
   var ANIMALS_SESSION_KEY = 'ariaAnimalsSession';
   var ANIMALS_STATS_KEY = 'ariaAnimalsStats';
+  var SHAPES_SESSION_KEY = 'ariaShapesSession';
+  var SHAPES_STATS_KEY = 'ariaShapesStats';
 
   function defaultAlphabetStats() {
     return {
@@ -374,6 +474,19 @@
   function defaultAnimalsStats() {
     return {
       freeAnimals: 0,
+      quizCorrect: 0,
+      chaseCorrect: 0,
+      quizStruggled: [],
+      chaseStruggled: [],
+      visitedFreeplay: false,
+      visitedQuiz: false,
+      visitedChase: false
+    };
+  }
+
+  function defaultShapesStats() {
+    return {
+      freeShapes: 0,
       quizCorrect: 0,
       chaseCorrect: 0,
       quizStruggled: [],
@@ -434,6 +547,20 @@
       sessionStorage.setItem(ANIMALS_STATS_KEY, JSON.stringify(defaultAnimalsStats()));
     } catch (err) {}
     window.location.href = 'animals.html';
+  });
+
+  document.getElementById('tile-shapes').addEventListener('click', function(e) {
+    e.preventDefault();
+    var mins = resolveMinutes();
+    var endsAt = mins != null ? Date.now() + mins * 60 * 1000 : null;
+    try {
+      sessionStorage.setItem(SHAPES_SESSION_KEY, JSON.stringify({
+        endsAt: endsAt,
+        startedAt: Date.now()
+      }));
+      sessionStorage.setItem(SHAPES_STATS_KEY, JSON.stringify(defaultShapesStats()));
+    } catch (err) {}
+    window.location.href = 'shapes.html';
   });
 })();
 </script>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Learn Animals &amp; Sounds — Aria's Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    background: linear-gradient(180deg, #e8f5e9 0%, #c8e6c9 35%, #b2dfdb 100%);
+    padding: 52px 12px 16px;
+  }
+
+  .home-btn {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 150;
+    font-family: "Fredoka", system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 3px solid #2e7d32;
+    background: #fff;
+    color: #1b5e20;
+    text-decoration: none;
+    box-shadow: 0 3px 0 #1b5e20;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .home-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #1b5e20;
+  }
+
+  #mode-buttons {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 100;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+    max-width: 62vw;
+  }
+
+  .mode-btn {
+    background: #eee;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #666;
+    cursor: pointer;
+  }
+  .mode-btn:hover { background: #ddd; }
+  .mode-btn.active {
+    background: #2e7d32;
+    border-color: #1b5e20;
+    color: #fff;
+  }
+  .mode-btn.active { pointer-events: none; }
+
+  #app-main {
+    width: min(80vw, calc(100% - 24px));
+    max-width: 960px;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .freeplay-hint {
+    font-family: "Fredoka", system-ui, sans-serif;
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+    font-weight: 600;
+    color: #33691e;
+    text-align: center;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
+
+  #view-freeplay {
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #view-freeplay[hidden],
+  #view-soon[hidden] {
+    display: none !important;
+  }
+
+  .animal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    gap: clamp(8px, 1.5vw, 14px);
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: calc(80dvh - 5.5rem);
+    min-height: calc(80vh - 5.5rem);
+    padding: 4px 0 12px;
+  }
+
+  @media (min-width: 520px) {
+    .animal-grid {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .animal-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(4px, 1vmin, 10px);
+    padding: clamp(8px, 1.5vmin, 14px);
+    min-height: 0;
+    height: 100%;
+    border: 3px solid #fff;
+    border-radius: 18px;
+    background: linear-gradient(160deg, #fff 0%, #f1f8e9 100%);
+    box-shadow: 0 4px 0 #7cb342;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .animal-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #689f38;
+  }
+
+  .animal-tile:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #689f38;
+  }
+
+  .animal-tile.pop {
+    animation: tile-pop 0.25s ease-out;
+  }
+
+  @keyframes tile-pop {
+    0% { transform: scale(0.92); }
+    60% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animal-tile { transition: none; }
+    .animal-tile:hover { transform: none; }
+    .animal-tile.pop { animation: none; }
+  }
+
+  .animal-tile__emoji {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    width: 100%;
+    font-size: clamp(3rem, min(18vmin, 22vw), 7rem);
+    line-height: 1;
+    filter: drop-shadow(0 2px 0 rgba(46, 125, 50, 0.2));
+  }
+
+  .animal-tile__name {
+    flex-shrink: 0;
+    font-family: "Fredoka", system-ui, sans-serif;
+    font-size: clamp(0.85rem, 2.5vmin, 1.1rem);
+    font-weight: 700;
+    color: #1b5e20;
+    text-align: center;
+    line-height: 1.15;
+  }
+
+  #view-soon {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px 16px;
+    gap: 12px;
+  }
+
+  .soon-emoji {
+    font-size: 3.5rem;
+    line-height: 1;
+  }
+
+  .soon-title {
+    font-family: "Fredoka", system-ui, sans-serif;
+    font-size: clamp(1.25rem, 4.5vw, 1.5rem);
+    font-weight: 700;
+    color: #1b5e20;
+  }
+
+  .soon-text {
+    font-family: "Fredoka", system-ui, sans-serif;
+    font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+    font-weight: 500;
+    color: #33691e;
+    max-width: 28ch;
+    line-height: 1.4;
+  }
+
+  /* Hidden video: audio is used for name + animal sound per segment (see script cues). */
+  .animal-sounds-video-wrap {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .animal-sounds-video-wrap video {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="home-btn" id="link-home" aria-label="Back to games">← Home</a>
+
+<div id="mode-buttons">
+  <button type="button" class="mode-btn active" data-mode="freeplay">Free Play</button>
+  <button type="button" class="mode-btn" data-mode="quiz">Quiz</button>
+  <button type="button" class="mode-btn" data-mode="chase">Chase</button>
+</div>
+
+<main id="app-main">
+  <p class="freeplay-hint" id="freeplay-hint">Tap an animal!</p>
+
+  <div id="view-freeplay">
+    <div class="animal-grid" id="animal-grid" aria-label="Animals"></div>
+  </div>
+
+  <div id="view-soon" hidden>
+    <div class="soon-emoji" id="soon-emoji" aria-hidden="true">🧩</div>
+    <p class="soon-title" id="soon-title">Coming soon</p>
+    <p class="soon-text" id="soon-text">This mode is not ready yet. Try Free play!</p>
+  </div>
+</main>
+
+<div class="animal-sounds-video-wrap" aria-hidden="true">
+  <video id="animal-sounds-video" preload="auto" playsinline>
+    <source src="assets/animals/sounds/animals-sounds.mp4" type="video/mp4">
+  </video>
+</div>
+
+<script>
+/**
+ * Order matches the grid: Pig, Rooster, Frog, Cat, Dog, Horse, Rabbit, Caterpillar, Sheep, Duck, Cow, Snake.
+ */
+const ANIMALS = [
+  { key: 'pig', name: 'Pig', emoji: '🐖' },
+  { key: 'rooster', name: 'Rooster', emoji: '🐓' },
+  { key: 'frog', name: 'Frog', emoji: '🐸' },
+  { key: 'cat', name: 'Cat', emoji: '🐈' },
+  { key: 'dog', name: 'Dog', emoji: '🐕' },
+  { key: 'horse', name: 'Horse', emoji: '🐎' },
+  { key: 'rabbit', name: 'Rabbit', emoji: '🐇' },
+  { key: 'caterpillar', name: 'Caterpillar', emoji: '🐛' },
+  { key: 'sheep', name: 'Sheep', emoji: '🐑' },
+  { key: 'duck', name: 'Duck', emoji: '🦆' },
+  { key: 'cow', name: 'Cow', emoji: '🐄' },
+  { key: 'snake', name: 'Snake', emoji: '🐍' }
+];
+
+/** Hardcoded [start, end] in seconds for each animal (same order as ANIMALS). */
+const ANIMAL_VIDEO_CUES = [
+  /* 0 Pig */         [0,      4.653],
+  /* 1 Rooster */     [4.653,  9.306],
+  /* 2 Frog */        [9.306,  13.958],
+  /* 3 Cat */         [13.958, 17],
+  /* 4 Dog */         [18,     20],
+  /* 5 Horse */       [21,     27.917],
+  /* 6 Rabbit */      [27.917, 31.5],
+  /* 7 Caterpillar */ [32.569, 36.8],
+  /* 8 Sheep */       [37.222, 41.875],
+  /* 9 Duck */        [45.29,  48.38],
+  /* 10 Cow */        [48.38,  52.5],
+  /* 11 Snake */      [52.5,   55.85]
+];
+
+const modeBtns = document.querySelectorAll('.mode-btn');
+const viewFreeplay = document.getElementById('view-freeplay');
+const viewSoon = document.getElementById('view-soon');
+const animalGrid = document.getElementById('animal-grid');
+const freeplayHint = document.getElementById('freeplay-hint');
+const soonEmoji = document.getElementById('soon-emoji');
+const soonTitle = document.getElementById('soon-title');
+const soonText = document.getElementById('soon-text');
+const animalSoundsVideo = document.getElementById('animal-sounds-video');
+
+let mode = 'freeplay';
+let videoSegmentTimeUpdate = null;
+let videoSegmentSeekedHandler = null;
+let videoSegmentSeekTimer = null;
+let seekWarmupGen = 0;
+
+function abortSeekWarmup() {
+  seekWarmupGen++;
+}
+
+function seekVideoTo(v, t) {
+  if (typeof v.fastSeek === 'function') {
+    try {
+      v.fastSeek(t);
+      return;
+    } catch (e) { /* fall through */ }
+  }
+  v.currentTime = t;
+}
+
+function getVideoSegmentBounds(animalIndex) {
+  const d = animalSoundsVideo.duration;
+  if (!d || !Number.isFinite(d)) {
+    return null;
+  }
+  const pair = ANIMAL_VIDEO_CUES[animalIndex];
+  if (!pair) {
+    return null;
+  }
+  return { start: pair[0], end: pair[1] };
+}
+
+function stopVideoSegmentPlayback() {
+  if (!animalSoundsVideo) return;
+  if (videoSegmentSeekTimer !== null) {
+    window.clearTimeout(videoSegmentSeekTimer);
+    videoSegmentSeekTimer = null;
+  }
+  if (videoSegmentSeekedHandler) {
+    animalSoundsVideo.removeEventListener('seeked', videoSegmentSeekedHandler);
+    videoSegmentSeekedHandler = null;
+  }
+  animalSoundsVideo.pause();
+  if (videoSegmentTimeUpdate) {
+    animalSoundsVideo.removeEventListener('timeupdate', videoSegmentTimeUpdate);
+    videoSegmentTimeUpdate = null;
+  }
+}
+
+function playAnimalSoundFromVideo(animalIndex) {
+  if (!animalSoundsVideo || mode !== 'freeplay') return;
+
+  abortSeekWarmup();
+  window.speechSynthesis.cancel();
+  stopVideoSegmentPlayback();
+
+  function runPlayback() {
+    const bounds = getVideoSegmentBounds(animalIndex);
+    if (!bounds) return;
+    const start = bounds.start;
+    const end = bounds.end;
+    const trim = 0.05;
+
+    animalSoundsVideo.pause();
+
+    let began = false;
+    function beginAfterSeek() {
+      if (began) return;
+      began = true;
+      if (videoSegmentSeekTimer !== null) {
+        window.clearTimeout(videoSegmentSeekTimer);
+        videoSegmentSeekTimer = null;
+      }
+      if (videoSegmentSeekedHandler) {
+        animalSoundsVideo.removeEventListener('seeked', videoSegmentSeekedHandler);
+        videoSegmentSeekedHandler = null;
+      }
+      videoSegmentTimeUpdate = function() {
+        if (animalSoundsVideo.currentTime >= end - trim) {
+          animalSoundsVideo.pause();
+          stopVideoSegmentPlayback();
+        }
+      };
+      animalSoundsVideo.addEventListener('timeupdate', videoSegmentTimeUpdate);
+      animalSoundsVideo.muted = false;
+      animalSoundsVideo.volume = 1;
+      animalSoundsVideo.play().catch(function() {});
+    }
+
+    videoSegmentSeekedHandler = beginAfterSeek;
+    animalSoundsVideo.addEventListener('seeked', beginAfterSeek);
+    seekVideoTo(animalSoundsVideo, start);
+
+    videoSegmentSeekTimer = window.setTimeout(function() {
+      videoSegmentSeekTimer = null;
+      if (!began && !animalSoundsVideo.seeking) {
+        beginAfterSeek();
+      }
+    }, 40);
+  }
+
+  if (!animalSoundsVideo.duration || !Number.isFinite(animalSoundsVideo.duration)) {
+    animalSoundsVideo.addEventListener('loadedmetadata', function onMeta() {
+      animalSoundsVideo.removeEventListener('loadedmetadata', onMeta);
+      runPlayback();
+    }, { once: true });
+    if (animalSoundsVideo.readyState === 0) {
+      animalSoundsVideo.load();
+    }
+    return;
+  }
+
+  runPlayback();
+}
+
+function onAnimalTap(animal, tileEl, animalIndex) {
+  if (mode !== 'freeplay') return;
+  tileEl.classList.remove('pop');
+  void tileEl.offsetWidth;
+  tileEl.classList.add('pop');
+  playAnimalSoundFromVideo(animalIndex);
+}
+
+function buildAnimalGrid() {
+  ANIMALS.forEach(function(animal, animalIndex) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'animal-tile';
+    btn.setAttribute('aria-label', animal.name);
+
+    const em = document.createElement('span');
+    em.className = 'animal-tile__emoji';
+    em.setAttribute('aria-hidden', 'true');
+    em.textContent = animal.emoji;
+
+    const nm = document.createElement('span');
+    nm.className = 'animal-tile__name';
+    nm.textContent = animal.name;
+
+    btn.appendChild(em);
+    btn.appendChild(nm);
+    btn.addEventListener('click', function() {
+      onAnimalTap(animal, btn, animalIndex);
+    });
+    animalGrid.appendChild(btn);
+  });
+}
+
+function setMode(newMode) {
+  mode = newMode;
+  modeBtns.forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+
+  if (mode === 'freeplay') {
+    viewFreeplay.hidden = false;
+    viewSoon.hidden = true;
+    freeplayHint.hidden = false;
+    window.speechSynthesis.cancel();
+    stopVideoSegmentPlayback();
+  } else {
+    viewFreeplay.hidden = true;
+    viewSoon.hidden = false;
+    freeplayHint.hidden = true;
+    window.speechSynthesis.cancel();
+    stopVideoSegmentPlayback();
+
+    if (mode === 'quiz') {
+      soonEmoji.textContent = '🧩';
+      soonTitle.textContent = 'Quiz — coming soon!';
+      soonText.textContent = 'Soon you will guess animals by their sounds. For now, enjoy Free play!';
+    } else {
+      soonEmoji.textContent = '🏃';
+      soonTitle.textContent = 'Chase — coming soon!';
+      soonText.textContent = 'Soon you will tap the right animal as it moves. For now, enjoy Free play!';
+    }
+  }
+}
+
+modeBtns.forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    setMode(btn.dataset.mode);
+    btn.blur();
+  });
+});
+
+buildAnimalGrid();
+setMode('freeplay');
+
+(function scheduleLateSegmentSeekWarmup() {
+  const v = animalSoundsVideo;
+  if (!v) return;
+  function runWarmup() {
+    const frozenGen = seekWarmupGen;
+    const times = [45.29, 48.38, 52.5, 0];
+    let i = 0;
+    const wasMuted = v.muted;
+    function finish() {
+      v.muted = wasMuted;
+      v.pause();
+    }
+    function step() {
+      if (seekWarmupGen !== frozenGen) {
+        finish();
+        return;
+      }
+      if (i >= times.length) {
+        finish();
+        return;
+      }
+      v.addEventListener('seeked', function onSk() {
+        v.removeEventListener('seeked', onSk);
+        v.pause();
+        i++;
+        step();
+      }, { once: true });
+      v.muted = true;
+      v.play().catch(function() {});
+      seekVideoTo(v, times[i]);
+    }
+    if (seekWarmupGen !== frozenGen) return;
+    v.pause();
+    step();
+  }
+  function onMeta() {
+    v.removeEventListener('loadedmetadata', onMeta);
+    window.setTimeout(runWarmup, 600);
+  }
+  if (v.readyState >= 1) {
+    window.setTimeout(runWarmup, 600);
+  } else {
+    v.addEventListener('loadedmetadata', onMeta);
+  }
+})();
+</script>
+</body>
+</html>

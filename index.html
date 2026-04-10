@@ -123,6 +123,38 @@
     opacity: 0.9;
   }
 
+  .game-tile--animals {
+    background: linear-gradient(145deg, #e8f5e9 0%, #a5d6a7 42%, #4dd0e1 100%);
+    box-shadow:
+      0 8px 0 #2e7d32,
+      0 14px 28px rgba(0, 0, 0, 0.2);
+  }
+
+  .game-tile--animals .game-tile__art {
+    filter: drop-shadow(0 4px 0 rgba(46, 125, 50, 0.4));
+  }
+
+  .game-tile--animals .game-tile__label {
+    color: #1b5e20;
+  }
+
+  .game-tile--animals .game-tile__hint {
+    color: #2e7d32;
+    opacity: 0.95;
+  }
+
+  .game-tile--animals:hover {
+    box-shadow:
+      0 12px 0 #2e7d32,
+      0 18px 32px rgba(0, 0, 0, 0.22);
+  }
+
+  .game-tile--animals:active {
+    box-shadow:
+      0 4px 0 #2e7d32,
+      0 8px 16px rgba(0, 0, 0, 0.18);
+  }
+
   .parent-panel {
     width: 100%;
     max-width: 720px;
@@ -231,6 +263,11 @@
       <span class="game-tile__art" aria-hidden="true">🔤🌈✨</span>
       <span class="game-tile__label">Learn Alphabets</span>
       <span class="game-tile__hint">Letters &amp; numbers!</span>
+    </a>
+    <a class="game-tile game-tile--animals" href="animals.html" id="tile-animals">
+      <span class="game-tile__art" aria-hidden="true">🦁🔊🐘</span>
+      <span class="game-tile__label">Learn Animals &amp; Sounds</span>
+      <span class="game-tile__hint">Roars, chirps &amp; more!</span>
     </a>
   </div>
 </main>

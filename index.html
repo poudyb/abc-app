@@ -56,6 +56,7 @@
   }
 
   .game-tile {
+    container-type: inline-size;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -97,6 +98,44 @@
     animation: tile-wiggle 2.5s ease-in-out infinite;
   }
 
+  .game-tile__art--letters {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 0.06em;
+    font-family: "Fredoka", system-ui, sans-serif;
+    font-weight: 800;
+  }
+
+  .game-tile__art--letters .game-tile__art__nums {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.04em;
+    margin: 0 0.02em;
+    line-height: 1;
+  }
+
+  .game-tile__art--letters .game-tile__art__n {
+    display: inline-block;
+    line-height: 1;
+    text-shadow:
+      0 2px 0 rgba(0, 0, 0, 0.12),
+      0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+
+  .game-tile__art__n--1 {
+    color: #e53935;
+  }
+
+  .game-tile__art__n--2 {
+    color: #f9a825;
+  }
+
+  .game-tile__art__n--3 {
+    color: #1e88e5;
+  }
+
   @keyframes tile-wiggle {
     0%, 100% { transform: rotate(-3deg) scale(1); }
     50% { transform: rotate(3deg) scale(1.05); }
@@ -109,11 +148,22 @@
   }
 
   .game-tile__label {
-    font-size: clamp(1.25rem, 4.5vw, 1.6rem);
+    display: block;
+    width: 100%;
     font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
     color: #bf360c;
     text-align: center;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    font-size: clamp(0.72rem, 3.15vw, 1.35rem);
+  }
+
+  @supports (font-size: 1cqi) {
+    .game-tile__label {
+      font-size: clamp(0.65rem, 5.85cqi, 1.35rem);
+    }
   }
 
   .game-tile__hint {
@@ -260,8 +310,16 @@
 
   <div class="game-grid">
     <a class="game-tile" href="alphabet.html" id="tile-alphabets">
-      <span class="game-tile__art" aria-hidden="true">🔤🌈✨</span>
-      <span class="game-tile__label">Learn Alphabets</span>
+      <span class="game-tile__art game-tile__art--letters" aria-hidden="true">
+        <span class="game-tile__art__emoji">🔤</span>
+        <span class="game-tile__art__nums">
+          <span class="game-tile__art__n game-tile__art__n--1">1</span>
+          <span class="game-tile__art__n game-tile__art__n--2">2</span>
+          <span class="game-tile__art__n game-tile__art__n--3">3</span>
+        </span>
+        <span class="game-tile__art__emoji">✨</span>
+      </span>
+      <span class="game-tile__label">Learn Alphabet &amp; Numbers</span>
       <span class="game-tile__hint">Letters &amp; numbers!</span>
     </a>
     <a class="game-tile game-tile--animals" href="animals.html" id="tile-animals">

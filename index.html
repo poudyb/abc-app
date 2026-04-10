@@ -273,12 +273,27 @@
 </main>
 <script>
 (function() {
-  var SESSION_KEY = 'ariaAlphabetSession';
-  var STATS_KEY = 'ariaAlphabetStats';
+  var ALPHABET_SESSION_KEY = 'ariaAlphabetSession';
+  var ALPHABET_STATS_KEY = 'ariaAlphabetStats';
+  var ANIMALS_SESSION_KEY = 'ariaAnimalsSession';
+  var ANIMALS_STATS_KEY = 'ariaAnimalsStats';
 
-  function defaultStats() {
+  function defaultAlphabetStats() {
     return {
       freeChars: 0,
+      quizCorrect: 0,
+      chaseCorrect: 0,
+      quizStruggled: [],
+      chaseStruggled: [],
+      visitedFreeplay: false,
+      visitedQuiz: false,
+      visitedChase: false
+    };
+  }
+
+  function defaultAnimalsStats() {
+    return {
+      freeAnimals: 0,
       quizCorrect: 0,
       chaseCorrect: 0,
       quizStruggled: [],
@@ -318,13 +333,27 @@
     var mins = resolveMinutes();
     var endsAt = mins != null ? Date.now() + mins * 60 * 1000 : null;
     try {
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+      sessionStorage.setItem(ALPHABET_SESSION_KEY, JSON.stringify({
         endsAt: endsAt,
         startedAt: Date.now()
       }));
-      sessionStorage.setItem(STATS_KEY, JSON.stringify(defaultStats()));
+      sessionStorage.setItem(ALPHABET_STATS_KEY, JSON.stringify(defaultAlphabetStats()));
     } catch (err) {}
     window.location.href = 'alphabet.html';
+  });
+
+  document.getElementById('tile-animals').addEventListener('click', function(e) {
+    e.preventDefault();
+    var mins = resolveMinutes();
+    var endsAt = mins != null ? Date.now() + mins * 60 * 1000 : null;
+    try {
+      sessionStorage.setItem(ANIMALS_SESSION_KEY, JSON.stringify({
+        endsAt: endsAt,
+        startedAt: Date.now()
+      }));
+      sessionStorage.setItem(ANIMALS_STATS_KEY, JSON.stringify(defaultAnimalsStats()));
+    } catch (err) {}
+    window.location.href = 'animals.html';
   });
 })();
 </script>

@@ -283,15 +283,15 @@
   }
 
   #quiz-top {
-    flex: 1 1 50%;
-    min-height: 42dvh;
-    max-height: 52dvh;
+    flex: 0 0 auto;
+    min-height: 0;
+    max-height: min(34dvh, 260px);
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(0.35rem, 2vw, 0.85rem);
-    padding: 8px 12px 12px;
+    gap: clamp(0.25rem, 1.5vw, 0.65rem);
+    padding: 6px 12px 10px;
     box-sizing: border-box;
   }
 
@@ -321,15 +321,15 @@
   }
 
   .quiz-replay-btn {
-    width: min(38vmin, 11rem);
-    height: min(38vmin, 11rem);
-    min-width: 7.5rem;
-    min-height: 7.5rem;
+    width: min(32vmin, 9.5rem);
+    height: min(32vmin, 9.5rem);
+    min-width: 6.75rem;
+    min-height: 6.75rem;
     border-radius: 50%;
     border: 4px solid #5e35b1;
     background: linear-gradient(165deg, #fff 0%, #f3e5f5 55%, #e1bee7 100%);
     box-shadow: 0 6px 0 #7b1fa2, 0 10px 28px rgba(74, 20, 140, 0.2);
-    font-size: min(22vmin, 5rem);
+    font-size: min(18vmin, 4.25rem);
     line-height: 1;
     cursor: pointer;
     display: flex;
@@ -351,28 +351,42 @@
   }
 
   .view-freeplay--quiz .shape-grid {
-    flex: 1 1 50%;
-    min-height: 42dvh;
-    max-height: 52dvh;
+    flex: 1 1 auto;
+    min-height: min(52dvh, 28rem);
+    max-height: none;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(5.25rem, 1fr));
-    gap: clamp(18px, 5vw, 32px);
-    padding: clamp(16px, 4vw, 28px) clamp(10px, 3vw, 20px) clamp(20px, 4.5vw, 32px);
+    /* Cap row height so 6×2 cells are not ultra-tall strips; art scales from width + height */
+    grid-template-rows: repeat(2, minmax(5.25rem, min(42vw, 11rem)));
+    gap: clamp(12px, 3.2vw, 24px);
+    padding: clamp(10px, 2.5vw, 20px) clamp(8px, 2.5vw, 16px) clamp(14px, 3vw, 24px);
     width: 100%;
-    min-height: 0;
-    align-content: stretch;
+    align-content: center;
     justify-content: center;
+  }
+
+  @media (max-width: 1024px) {
+    .view-freeplay--quiz .shape-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-rows: repeat(3, minmax(4.75rem, min(36vw, 10rem)));
+    }
+  }
+
+  @media (max-width: 520px) {
+    .view-freeplay--quiz .shape-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(4, minmax(4.5rem, min(30vw, 9rem)));
+      gap: clamp(10px, 2.5vw, 16px);
+    }
   }
 
   .view-freeplay--quiz .shape-tile {
     position: relative;
-    min-height: 3rem;
+    min-height: 0;
     min-width: 0;
     height: 100%;
     width: 100%;
     max-width: 100%;
-    /* Match free play: avoid clipping emoji/SVG and purple drop-shadow */
-    padding: clamp(10px, 2.2vmin, 18px);
+    padding: clamp(8px, 2vmin, 14px);
     gap: 0;
     justify-content: center;
     align-items: center;
@@ -381,14 +395,14 @@
     overflow: visible;
   }
 
-  /* Quiz uses smaller cells — re-assert same art rules as free play (cqmin + 1em SVG). */
+  /* Quiz: cqmin matched the narrow column width on 6×2 — icons looked tiny. Prefer cqw/cqh + floor. */
   @supports (container-type: size) {
     .shape-grid--quiz .shape-tile__emoji {
       width: auto;
       height: auto;
-      max-width: 80%;
-      max-height: 80%;
-      font-size: min(80cqmin, 7rem);
+      max-width: 94%;
+      max-height: 94%;
+      font-size: clamp(2.5rem, min(34cqw, 40cqh, 22vmin), 6.5rem);
     }
 
     .shape-grid--quiz .shape-tile__emoji .shape-tile-svg {
@@ -401,9 +415,9 @@
 
   @supports not (container-type: size) {
     .shape-grid--quiz .shape-tile__emoji {
-      max-width: 80%;
-      max-height: 80%;
-      font-size: clamp(2.25rem, min(12vmin, 11vw), 5.25rem);
+      max-width: 94%;
+      max-height: 94%;
+      font-size: clamp(2.5rem, 12vmin, 4.5rem);
     }
 
     .shape-grid--quiz .shape-tile__emoji .shape-tile-svg {

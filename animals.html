@@ -306,26 +306,26 @@
     min-height: min(52dvh, 28rem);
     max-height: none;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(5.5rem, 1fr));
+    grid-template-rows: repeat(2, minmax(5.25rem, min(42vw, 11rem)));
     gap: clamp(12px, 3.2vw, 24px);
     padding: clamp(10px, 2.5vw, 20px) clamp(8px, 2.5vw, 16px) clamp(14px, 3vw, 24px);
     width: 100%;
-    align-content: stretch;
+    align-content: center;
     justify-content: center;
   }
 
-  /* iPad / narrow width: wider cells so emojis are not pin-sized (12 tiles → 4×3). */
+  /* iPad / narrow width: wider cells (12 tiles → 4×3 or 3×4). */
   @media (max-width: 1024px) {
     .view-freeplay--quiz .animal-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      grid-template-rows: repeat(3, minmax(4.75rem, 1fr));
+      grid-template-rows: repeat(3, minmax(4.75rem, min(36vw, 10rem)));
     }
   }
 
   @media (max-width: 520px) {
     .view-freeplay--quiz .animal-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      grid-template-rows: repeat(4, minmax(4.5rem, 1fr));
+      grid-template-rows: repeat(4, minmax(4.5rem, min(30vw, 9rem)));
       gap: clamp(10px, 2.5vw, 16px);
     }
   }
@@ -355,7 +355,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(2.1rem, 9vmin, 3.75rem);
+    font-size: clamp(2.5rem, 12vmin, 4.5rem);
     line-height: 1;
   }
 
@@ -370,7 +370,7 @@
       height: auto;
       max-width: 92%;
       max-height: 92%;
-      font-size: clamp(2.35rem, min(28cqw, 32cqh, 18vmin), 5.75rem);
+      font-size: clamp(2.5rem, min(34cqw, 40cqh, 22vmin), 6.5rem);
     }
   }
 

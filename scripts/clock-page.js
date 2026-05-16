@@ -171,13 +171,15 @@ function renderClockTime(face, h, m, s, opts) {
 
   if (opts && opts.colorCycling) {
     const mf = opts.msFraction || 0;
-    const secondsVal = s == null ? 0 : s;
-    slots.h1.style.setProperty('--led-hue', String((h * 30) % 360));
-    slots.h2.style.setProperty('--led-hue', String((h * 30 + 60) % 360));
-    slots.m1.style.setProperty('--led-hue', String((m * 6) % 360));
-    slots.m2.style.setProperty('--led-hue', String((m * 6 + 180) % 360));
-    if (slots.s1) slots.s1.style.setProperty('--led-hue', String((secondsVal * 30 + mf * 5) % 360));
-    if (slots.s2) slots.s2.style.setProperty('--led-hue', String(mf * 360));
+    const hourHue = (h * 30) % 360;
+    const minuteHue = (m * 6 + 90) % 360;
+    const secondHue = mf * 360;
+    slots.h1.style.setProperty('--led-hue', String(hourHue));
+    slots.h2.style.setProperty('--led-hue', String(hourHue));
+    slots.m1.style.setProperty('--led-hue', String(minuteHue));
+    slots.m2.style.setProperty('--led-hue', String(minuteHue));
+    if (slots.s1) slots.s1.style.setProperty('--led-hue', String(secondHue));
+    if (slots.s2) slots.s2.style.setProperty('--led-hue', String(secondHue));
     const colonOpacity = 0.35 + 0.65 * Math.abs(Math.cos(mf * Math.PI));
     face._colons.forEach(function(c) {
       c.style.setProperty('--colon-opacity', String(colonOpacity));

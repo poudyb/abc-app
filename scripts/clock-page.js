@@ -406,20 +406,13 @@ function enterMatch() {
   const realFace = buildClockFace({ showSeconds: true, sizeClass: 'clock-face--real' });
   const manualFace = buildClockFace({ showSeconds: false, sizeClass: 'clock-face--manual' });
 
-  // Invisible SS placeholders so the manual face matches the real face's width,
-  // keeping HH-under-HH and MM-under-MM when both are centered.
-  const placeholderColon = createColonEl();
-  placeholderColon.classList.add('clock-colon--placeholder');
-  manualFace.appendChild(placeholderColon);
-  const placeholderS1 = createDigitSvg();
-  const placeholderS2 = createDigitSvg();
-  placeholderS1.classList.add('clock-digit-svg--placeholder');
-  placeholderS2.classList.add('clock-digit-svg--placeholder');
-  manualFace.appendChild(placeholderS1);
-  manualFace.appendChild(placeholderS2);
-
-  wrap.appendChild(realFace);
-  wrap.appendChild(manualFace);
+  // Stack both clocks left-aligned so HH lines up under HH and MM under MM.
+  // (Centering each face independently would offset the narrower manual clock.)
+  const stack = document.createElement('div');
+  stack.className = 'match-stack';
+  stack.appendChild(realFace);
+  stack.appendChild(manualFace);
+  wrap.appendChild(stack);
   appMain.appendChild(wrap);
 
   const manualState = { h1: new Set(), h2: new Set(), m1: new Set(), m2: new Set() };

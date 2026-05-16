@@ -201,10 +201,15 @@
     filter: drop-shadow(0 0 2px #b2ebf2);
   }
 
-  .clock-digit-svg--placeholder,
-  .clock-colon--placeholder {
-    visibility: hidden;
-    pointer-events: none;
+  .match-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(12px, 3vw, 22px);
+  }
+
+  .match-stack .clock-face {
+    margin-inline: 0;
   }
 
   .clock-face--manual.matching {

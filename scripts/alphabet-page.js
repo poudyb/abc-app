@@ -153,7 +153,7 @@ activity = createCollectionActivity({
     const count = Math.min(3 + Math.floor(difficulty / 2), 8);
     return {
       count,
-      speed: 100 + difficulty * 10,
+      speed: Math.min(100 + difficulty * 10, 160),
       fontSize: Math.max(10, 18 - count)
     };
   },

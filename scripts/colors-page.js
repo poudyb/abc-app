@@ -135,7 +135,7 @@ activity = createCollectionActivity({
     const count = Math.min(3 + Math.floor(difficulty / 2), 6);
     return {
       count: Math.min(count, COLORS_DATA.length),
-      speed: 100 + difficulty * 10,
+      speed: Math.min(100 + difficulty * 10, 160),
       dotVmin: Math.max(10, 20 - count * 1.2)
     };
   },

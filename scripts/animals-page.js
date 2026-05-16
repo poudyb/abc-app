@@ -266,7 +266,7 @@ activity = createCollectionActivity({
     const count = Math.min(3 + Math.floor(difficulty / 2), 8);
     return {
       count: Math.min(count, ANIMALS.length),
-      speed: 100 + difficulty * 10,
+      speed: Math.min(100 + difficulty * 10, 160),
       fontSize: Math.max(12, 22 - count * 1.2)
     };
   },

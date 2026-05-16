@@ -6,7 +6,7 @@ const COLORS_DATA = [
   { key: 'orange', name: 'Orange', say: 'Orange', fill: '#ff9800' },
   { key: 'purple', name: 'Purple', say: 'Purple', fill: '#8e24aa' },
   { key: 'pink', name: 'Pink', say: 'Pink', fill: '#f06292' },
-  { key: 'brown', name: 'Brown', say: 'Brown', fill: '#6d4c41' }
+  { key: 'brown', name: 'Brown', say: 'Brown', fill: '#8d6e63' }
 ];
 
 const COLOR_CONFETTI_HEX = [
@@ -17,7 +17,7 @@ const COLOR_CONFETTI_HEX = [
   '#ff9800',
   '#8e24aa',
   '#f06292',
-  '#6d4c41'
+  '#8d6e63'
 ];
 
 function colorFillForKey(key) {

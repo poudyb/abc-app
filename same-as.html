@@ -32,19 +32,19 @@
 <main id="app-main">
   <div class="match-board">
     <div class="match-ref-wrap">
-      <div class="match-ref-card" id="ref-card" aria-hidden="true">
-        <div class="match-ref-card__art" id="ref-art"></div>
-      </div>
+      <button type="button" class="match-ref-card" id="ref-card" aria-label="Play the question out loud">
+        <span class="match-ref-card__art" id="ref-art" aria-hidden="true"></span>
+      </button>
       <div class="match-cue" aria-hidden="true" title="Same">🟰</div>
-    </div>
-    <div class="match-actions">
-      <button type="button" class="match-prompt-btn" id="prompt-replay" aria-label="Play the question out loud">🔊</button>
     </div>
     <div class="match-choices">
       <button type="button" class="match-choice" id="choice-left" aria-label="First choice">
         <span class="match-choice__art" id="choice-left-art"></span>
       </button>
-      <button type="button" class="match-choice" id="choice-right" aria-label="Second choice">
+      <button type="button" class="match-choice" id="choice-middle" aria-label="Second choice">
+        <span class="match-choice__art" id="choice-middle-art"></span>
+      </button>
+      <button type="button" class="match-choice" id="choice-right" aria-label="Third choice">
         <span class="match-choice__art" id="choice-right-art"></span>
       </button>
     </div>

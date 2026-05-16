@@ -1,11 +1,13 @@
 const catBtns = document.querySelectorAll('.cat-btn');
+const refCard = document.getElementById('ref-card');
 const refArt = document.getElementById('ref-art');
-const choiceLeft = document.getElementById('choice-left');
-const choiceRight = document.getElementById('choice-right');
-const choiceLeftArt = document.getElementById('choice-left-art');
-const choiceRightArt = document.getElementById('choice-right-art');
-const promptReplay = document.getElementById('prompt-replay');
 const thumbsDownEl = document.getElementById('thumbs-down');
+
+const CHOICES = [
+  { btn: document.getElementById('choice-left'), art: document.getElementById('choice-left-art') },
+  { btn: document.getElementById('choice-middle'), art: document.getElementById('choice-middle-art') },
+  { btn: document.getElementById('choice-right'), art: document.getElementById('choice-right-art') }
+];
 
 const PROMPT_SAY = 'Which one is the same as this?';
 const CONFETTI_HEX = ['#00838f', '#26c6da', '#b2ebf2', '#e53935', '#43a047', '#8e24aa', '#ff9800', '#1e88e5'];
@@ -13,8 +15,7 @@ const CONFETTI_HEX = ['#00838f', '#26c6da', '#b2ebf2', '#e53935', '#43a047', '#8
 let category = 'animals';
 let pool = ANIMALS;
 let targetIndex = -1;
-let wrongIndex = -1;
-let correctIsLeft = true;
+let correctChoiceIdx = 0;
 let roundLocked = false;
 let delayedNextTimer = null;
 
@@ -78,14 +79,17 @@ function renderArt(el, item) {
   el.appendChild(span);
 }
 
-function pickWrongIndex(target) {
-  let candidate;
+function pickWrongIndices(target, count) {
+  const picked = [];
   let guard = 0;
-  do {
-    candidate = Math.floor(Math.random() * pool.length);
+  while (picked.length < count && guard < 200) {
+    const candidate = Math.floor(Math.random() * pool.length);
+    if (candidate !== target && picked.indexOf(candidate) === -1) {
+      picked.push(candidate);
+    }
     guard++;
-  } while (candidate === target && pool.length > 1 && guard < 50);
-  return candidate;
+  }
+  return picked;
 }
 
 function struggleIdForIndex(index) {
@@ -115,27 +119,25 @@ function startRound() {
   clearTimeout(delayedNextTimer);
   delayedNextTimer = null;
   roundLocked = false;
-  choiceLeft.classList.remove('match-choice--locked', 'pop');
-  choiceRight.classList.remove('match-choice--locked', 'pop');
-  choiceLeft.disabled = false;
-  choiceRight.disabled = false;
+  CHOICES.forEach(function(c) {
+    c.btn.classList.remove('match-choice--locked', 'pop');
+    c.btn.disabled = false;
+  });
   thumbsDown.hide();
 
   targetIndex = Math.floor(Math.random() * pool.length);
-  wrongIndex = pickWrongIndex(targetIndex);
-  correctIsLeft = Math.random() < 0.5;
+  const wrongIndices = pickWrongIndices(targetIndex, CHOICES.length - 1);
+  correctChoiceIdx = Math.floor(Math.random() * CHOICES.length);
 
-  const leftIndex = correctIsLeft ? targetIndex : wrongIndex;
-  const rightIndex = correctIsLeft ? wrongIndex : targetIndex;
+  let wrongCursor = 0;
+  CHOICES.forEach(function(c, i) {
+    const choiceItemIndex = i === correctChoiceIdx ? targetIndex : wrongIndices[wrongCursor++];
+    renderArt(c.art, pool[choiceItemIndex]);
+    const label = pool[choiceItemIndex].name + (choiceItemIndex === targetIndex ? ' - matches top' : '');
+    c.btn.setAttribute('aria-label', label);
+  });
 
   renderArt(refArt, pool[targetIndex]);
-  renderArt(choiceLeftArt, pool[leftIndex]);
-  renderArt(choiceRightArt, pool[rightIndex]);
-
-  const leftLabel = pool[leftIndex].name + (leftIndex === targetIndex ? ' - matches top' : '');
-  const rightLabel = pool[rightIndex].name + (rightIndex === targetIndex ? ' - matches top' : '');
-  choiceLeft.setAttribute('aria-label', leftLabel);
-  choiceRight.setAttribute('aria-label', rightLabel);
 
   cancelSpeech();
   window.setTimeout(function() {
@@ -143,12 +145,11 @@ function startRound() {
   }, 280);
 }
 
-function onChoiceTap(isLeft) {
+function onChoiceTap(idx) {
   if (session.isSessionEnded() || roundLocked) return;
-  const correct = isLeft === correctIsLeft;
-  const btn = isLeft ? choiceLeft : choiceRight;
+  const btn = CHOICES[idx].btn;
 
-  if (correct) {
+  if (idx === correctChoiceIdx) {
     roundLocked = true;
     session.mutateStats(function(stats) {
       stats.matchCorrect++;
@@ -156,8 +157,7 @@ function onChoiceTap(isLeft) {
     btn.classList.remove('pop');
     void btn.offsetWidth;
     btn.classList.add('pop');
-    choiceLeft.classList.add('match-choice--locked');
-    choiceRight.classList.add('match-choice--locked');
+    CHOICES.forEach(function(c) { c.btn.classList.add('match-choice--locked'); });
     spawnConfetti({
       colors: CONFETTI_HEX,
       count: 48,
@@ -197,12 +197,13 @@ function stopMatchGame() {
   thumbsDown.hide();
 }
 
-choiceLeft.addEventListener('click', function() { onChoiceTap(true); });
-choiceRight.addEventListener('click', function() { onChoiceTap(false); });
+CHOICES.forEach(function(c, i) {
+  c.btn.addEventListener('click', function() { onChoiceTap(i); });
+});
 
-promptReplay.addEventListener('click', function() {
+refCard.addEventListener('click', function() {
   speakPrompt();
-  promptReplay.blur();
+  refCard.blur();
 });
 
 catBtns.forEach(function(btn) {

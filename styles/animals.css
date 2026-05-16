@@ -344,11 +344,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(2.5rem, 12vmin, 4.5rem);
+    font-size: clamp(3.75rem, min(24vmin, 26vw), 8rem);
     line-height: 1;
   }
 
-  /* Scale emoji from tile size; cqmin was often the narrow 6-column width — use min(cqw,cqh) with a floor */
+  /* Scale emoji from tile size so quiz animals fill most of the tile without changing tile dimensions. */
   @supports (container-type: size) {
     .view-freeplay--quiz .animal-tile {
       container-type: size;
@@ -357,9 +357,9 @@
     .view-freeplay--quiz .animal-tile__emoji {
       width: auto;
       height: auto;
-      max-width: 92%;
-      max-height: 92%;
-      font-size: clamp(2.5rem, min(34cqw, 40cqh, 22vmin), 6.5rem);
+      max-width: 80%;
+      max-height: 80%;
+      font-size: clamp(3.75rem, min(80cqw, 80cqh), 8rem);
     }
   }
 

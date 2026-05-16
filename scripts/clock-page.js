@@ -171,9 +171,10 @@ function renderClockTime(face, h, m, s, opts) {
 
   if (opts && opts.colorCycling) {
     const mf = opts.msFraction || 0;
+    const secondsVal = s == null ? 0 : s;
     const hourHue = (h * 30) % 360;
     const minuteHue = (m * 6 + 90) % 360;
-    const secondHue = mf * 360;
+    const secondHue = (secondsVal * 30 + 200) % 360;
     slots.h1.style.setProperty('--led-hue', String(hourHue));
     slots.h2.style.setProperty('--led-hue', String(hourHue));
     slots.m1.style.setProperty('--led-hue', String(minuteHue));
@@ -404,6 +405,19 @@ function enterMatch() {
 
   const realFace = buildClockFace({ showSeconds: true, sizeClass: 'clock-face--real' });
   const manualFace = buildClockFace({ showSeconds: false, sizeClass: 'clock-face--manual' });
+
+  // Invisible SS placeholders so the manual face matches the real face's width,
+  // keeping HH-under-HH and MM-under-MM when both are centered.
+  const placeholderColon = createColonEl();
+  placeholderColon.classList.add('clock-colon--placeholder');
+  manualFace.appendChild(placeholderColon);
+  const placeholderS1 = createDigitSvg();
+  const placeholderS2 = createDigitSvg();
+  placeholderS1.classList.add('clock-digit-svg--placeholder');
+  placeholderS2.classList.add('clock-digit-svg--placeholder');
+  manualFace.appendChild(placeholderS1);
+  manualFace.appendChild(placeholderS2);
+
   wrap.appendChild(realFace);
   wrap.appendChild(manualFace);
   appMain.appendChild(wrap);

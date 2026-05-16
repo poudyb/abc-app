@@ -201,6 +201,12 @@
     filter: drop-shadow(0 0 2px #b2ebf2);
   }
 
+  .clock-digit-svg--placeholder,
+  .clock-colon--placeholder {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .clock-face--manual.matching {
     box-shadow:
       inset 0 0 26px rgba(33, 150, 243, 0.55),
@@ -296,16 +302,21 @@
   }
 
   .option-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(8px, 2vw, 14px);
-    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     align-items: stretch;
+    gap: clamp(8px, 2vw, 14px);
   }
 
-  @media (max-width: 560px) {
+  .option-row .clock-option {
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 999px) {
     .option-row {
-      grid-template-columns: 1fr;
+      flex-direction: column;
+      align-items: center;
     }
   }
 

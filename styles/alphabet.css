@@ -192,6 +192,29 @@
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
+
+    .alphabet-page #touch-grid {
+      grid-template-columns: repeat(20, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+    }
+
+    .alphabet-page .grid-btn {
+      grid-column: span 2;
+    }
+
+    .alphabet-page .grid-btn[data-key="A"] {
+      grid-column: 2 / span 2;
+    }
+
+    .alphabet-page .grid-btn[data-key="Z"] {
+      grid-column: 4 / span 2;
+    }
+
+    .numbers-page #touch-grid {
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+    }
+
     .grid-btn:active {
       background: #ddd;
       transform: scale(0.95);

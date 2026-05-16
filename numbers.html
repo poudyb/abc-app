@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Learn Alphabets - Aria's Playroom</title>
+<title>Learn Numbers - Aria's Playroom</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles/alphabet.css">
 </head>
-<body class="alphabet-page">
+<body class="numbers-page">
 
 <div id="play-timer" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <div id="session-end-overlay" aria-modal="true" role="dialog" aria-labelledby="session-end-title" aria-hidden="true">
   <div class="session-end-card">
     <h2 id="session-end-title">Time's up!</h2>
-    <p class="session-end-sub">You did awesome — here's your scoreboard!</p>
+    <p class="session-end-sub">You did awesome - here's your scoreboard!</p>
     <div class="session-end-stats" id="session-end-stats"></div>
     <a href="index.html" class="session-end-home" id="session-end-home">Back to home</a>
   </div>
@@ -29,7 +29,7 @@
   <button class="mode-btn" data-mode="chase">Chase</button>
 </div>
 <div id="display-area">
-  <div id="hint">Press any letter!</div>
+  <div id="hint">Press any number!</div>
   <div id="letter"></div>
 </div>
 <div id="touch-grid"></div>
@@ -38,7 +38,7 @@
 <div id="confetti-container"></div>
 
 <script src="shared/no-pinch.js"></script>
-<script src="data/alphabet.js"></script>
+<script src="data/numbers.js"></script>
 <script src="shared/feedback.js"></script>
 <script src="shared/stats.js"></script>
 <script src="shared/speech.js"></script>

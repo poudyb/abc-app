@@ -193,6 +193,42 @@
     color: #1e88e5;
   }
 
+  .game-tile__art__n--0 {
+    color: #43a047;
+  }
+
+  .game-tile--numbers {
+    background: linear-gradient(145deg, #e3f2fd 0%, #90caf9 42%, #42a5f5 100%);
+    box-shadow:
+      0 8px 0 #1565c0,
+      0 14px 28px rgba(0, 0, 0, 0.2);
+  }
+
+  .game-tile--numbers .game-tile__art {
+    filter: drop-shadow(0 4px 0 rgba(21, 101, 192, 0.35));
+  }
+
+  .game-tile--numbers .game-tile__label {
+    color: #0d47a1;
+  }
+
+  .game-tile--numbers .game-tile__hint {
+    color: #1565c0;
+    opacity: 0.95;
+  }
+
+  .game-tile--numbers:hover {
+    box-shadow:
+      0 12px 0 #1565c0,
+      0 18px 32px rgba(0, 0, 0, 0.22);
+  }
+
+  .game-tile--numbers:active {
+    box-shadow:
+      0 4px 0 #1565c0,
+      0 8px 16px rgba(0, 0, 0, 0.18);
+  }
+
   @keyframes tile-wiggle {
     0%, 100% { transform: rotate(-2deg) scale(1); }
     50% { transform: rotate(2deg) scale(1.03); }

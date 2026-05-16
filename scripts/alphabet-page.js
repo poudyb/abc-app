@@ -7,8 +7,9 @@ const displayArea = document.getElementById('display-area');
 const chaseArena = document.getElementById('chase-arena');
 const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
-const FREEPLAY_HINT = isTouch ? 'Tap any letter or number!' : 'Press any letter or number!';
-const CHAR_ITEMS = CHARS.split('');
+const SYMBOL_CONFIG = LEARNING_SYMBOLS_CONFIG;
+const FREEPLAY_HINT = isTouch ? SYMBOL_CONFIG.touchHint : SYMBOL_CONFIG.keyboardHint;
+const SYMBOL_ITEMS = SYMBOL_CONFIG.items;
 
 let lastColor = '';
 let fadeTimer = null;
@@ -18,11 +19,9 @@ let activity = null;
 function renderSummary(board, stats) {
   renderThreeModeSummary(board, stats, buildModeSummaryConfig({
     freeplay: {
-      countField: 'freeChars',
-      emptyMessage: 'You opened Free play - next time, tap lots of letters and numbers to fill the rainbow! 🌈',
-      countMessage: function(count) {
-        return 'You explored ' + count + ' ' + (count === 1 ? 'letter or number' : 'letters & numbers') + '! 🌈';
-      }
+      countField: SYMBOL_CONFIG.freeplayStatField,
+      emptyMessage: SYMBOL_CONFIG.summary.freeplayEmpty,
+      countMessage: SYMBOL_CONFIG.summary.freeplayCount
     },
     quiz: {
       message: function(info) {
@@ -30,13 +29,9 @@ function renderSummary(board, stats) {
           return 'Nice work - ' + info.correct + ' quiz ' + (info.correct === 1 ? 'round' : 'rounds') + ' solved!';
         }
         if (info.struggled.length > 0) return 'You were practicing - keep going next time!';
-        return 'You opened Quiz - try solving puzzles next time! 🧩';
+        return SYMBOL_CONFIG.summary.quizEmpty;
       },
-      struggledLabel: function(info) {
-        return info.correct > 0
-          ? 'These took an extra try (you got them!):'
-          : 'These letters or numbers needed another try:';
-      },
+      struggledLabel: SYMBOL_CONFIG.summary.quizStruggled,
       renderPill: function(pill, value) { pill.textContent = value; }
     },
     chase: {
@@ -45,7 +40,7 @@ function renderSummary(board, stats) {
           return 'You caught the target ' + info.correct + ' ' + (info.correct === 1 ? 'time' : 'times') + '!';
         }
         if (info.struggled.length > 0) return 'You were chasing - nice effort!';
-        return 'You opened Chase - tap the right letter next time! 🎯';
+        return SYMBOL_CONFIG.summary.chaseEmpty;
       },
       perfectMessage: 'No mix-ups - sharp tapping! 🎯',
       struggledLabel: function(info) {
@@ -59,7 +54,7 @@ function renderSummary(board, stats) {
   cancelSpeech();
 }
 
-function stopAlphabetsGame() {
+function stopSymbolsGame() {
   cancelSpeech();
   if (fadeTimer != null) {
     clearTimeout(fadeTimer);
@@ -70,11 +65,11 @@ function stopAlphabetsGame() {
 }
 
 const session = createTimedSession({
-  sessionKey: 'ariaAlphabetSession',
-  statsKey: 'ariaAlphabetStats',
-  defaultStats: function() { return createModeStats('freeChars'); },
-  normalizeStats: function(parsed) { return normalizeModeStats(parsed, 'freeChars'); },
-  stopGame: stopAlphabetsGame,
+  sessionKey: SYMBOL_CONFIG.sessionKey,
+  statsKey: SYMBOL_CONFIG.statsKey,
+  defaultStats: SYMBOL_CONFIG.defaultStats,
+  normalizeStats: SYMBOL_CONFIG.normalizeStats,
+  stopGame: stopSymbolsGame,
   renderSummary
 });
 
@@ -116,20 +111,21 @@ function scheduleFade() {
 }
 
 function speakChar(ch) {
-  speakText(NUMBER_WORDS[ch] || ch.toLowerCase(), { rate: 0.9 });
+  speakText(SYMBOL_CONFIG.speakItem(ch), { rate: 0.9 });
 }
 
 activity = createCollectionActivity({
-  items: CHAR_ITEMS,
+  items: SYMBOL_ITEMS,
   session,
   feedback: { audio, showCelebrationEmojis, spawnConfetti },
-  promptItem: function(index) { speakChar(CHAR_ITEMS[index]); },
+  promptItem: function(index) { speakChar(SYMBOL_ITEMS[index]); },
   stopPrompt: cancelSpeech,
-  freeplayStatField: 'freeChars',
+  freeplayStatField: SYMBOL_CONFIG.freeplayStatField,
   getTargetKey: function(item) { return item; },
   renderTile: function(ch) {
     const btn = document.createElement('button');
     btn.className = 'grid-btn';
+    btn.dataset.key = ch;
     btn.textContent = ch;
     return btn;
   },
@@ -192,21 +188,19 @@ document.addEventListener('keydown', function(event) {
   if (session.isSessionEnded()) return;
   if (event.metaKey || event.ctrlKey || event.altKey || event.repeat) return;
   const key = event.key.toUpperCase();
-  if (!/^[A-Z0-9]$/.test(key)) return;
-  event.preventDefault();
-  activity.triggerItemByKey(key);
+  if (activity.triggerItemByKey(key)) event.preventDefault();
 });
 
-window.addEventListener('pagehide', stopAlphabetsGame);
+window.addEventListener('pagehide', stopSymbolsGame);
 window.addEventListener('pageshow', function(event) {
   if (event.persisted) {
-    stopAlphabetsGame();
+    stopSymbolsGame();
     activity.setMode('freeplay');
   }
 });
 
 document.getElementById('link-home').addEventListener('click', function() {
-  stopAlphabetsGame();
+  stopSymbolsGame();
   session.clearPlaySessionStorage(false);
 });
 

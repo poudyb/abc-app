@@ -2,21 +2,33 @@ const ACTIVITIES = [
   {
     id: 'alphabets',
     href: 'alphabet.html',
-    title: 'Learn Alphabets and Numbers',
-    hint: 'Letters and numbers!',
+    title: 'Learn Alphabets',
+    hint: 'Letters A to Z!',
     tileClass: '',
     artClasses: 'game-tile__art game-tile__art--letters',
     artHtml:
       '<span class="game-tile__art__emoji">🔤</span>' +
-      '<span class="game-tile__art__nums">' +
-      '<span class="game-tile__art__n game-tile__art__n--1">1</span>' +
-      '<span class="game-tile__art__n game-tile__art__n--2">2</span>' +
-      '<span class="game-tile__art__n game-tile__art__n--3">3</span>' +
-      '</span>' +
       '<span class="game-tile__art__emoji">✨</span>',
     sessionKey: 'ariaAlphabetSession',
     statsKey: 'ariaAlphabetStats',
-    defaultStats: function() { return createModeStats('freeChars'); }
+    defaultStats: function() { return createModeStats('freeLetters'); }
+  },
+  {
+    id: 'numbers',
+    href: 'numbers.html',
+    title: 'Learn Numbers',
+    hint: 'Numbers 0 to 9!',
+    tileClass: 'game-tile--numbers',
+    artClasses: 'game-tile__art game-tile__art--letters game-tile__art--numbers',
+    artHtml:
+      '<span class="game-tile__art__nums">' +
+      '<span class="game-tile__art__n game-tile__art__n--0">0</span>' +
+      '<span class="game-tile__art__n game-tile__art__n--1">1</span>' +
+      '<span class="game-tile__art__n game-tile__art__n--2">2</span>' +
+      '</span>',
+    sessionKey: 'ariaNumbersSession',
+    statsKey: 'ariaNumbersStats',
+    defaultStats: function() { return createModeStats('freeNumbers'); }
   },
   {
     id: 'animals',

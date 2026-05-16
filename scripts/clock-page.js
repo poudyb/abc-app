@@ -392,20 +392,19 @@ function setMode(name) {
   else if (name === 'next') activeMode = enterNext();
 }
 
-function enterWatch() {
-  const wrap = document.createElement('div');
-  wrap.className = 'watch-wrap';
-  const face = buildClockFace({ showSeconds: true, sizeClass: 'clock-face--real clock-face--big clock-face--speakable' });
+function enableSpeakOnTap(face) {
+  face.classList.add('clock-face--speakable');
   face.setAttribute('role', 'button');
   face.setAttribute('tabindex', '0');
   face.setAttribute('aria-label', 'Tap to hear the time');
-  wrap.appendChild(face);
-  appMain.appendChild(wrap);
 
   function speakNow() {
     if (session.isSessionEnded()) return;
     const now = new Date();
     speakText(timeToWords(get12Hour(now), now.getMinutes()), { rate: 0.88 });
+    face.classList.remove('is-speaking');
+    void face.offsetWidth;
+    face.classList.add('is-speaking');
   }
 
   face.addEventListener('click', speakNow);
@@ -415,6 +414,18 @@ function enterWatch() {
       speakNow();
     }
   });
+  face.addEventListener('animationend', function(ev) {
+    if (ev.animationName === 'clock-speak-pulse') face.classList.remove('is-speaking');
+  });
+}
+
+function enterWatch() {
+  const wrap = document.createElement('div');
+  wrap.className = 'watch-wrap';
+  const face = buildClockFace({ showSeconds: true, sizeClass: 'clock-face--real clock-face--big' });
+  enableSpeakOnTap(face);
+  wrap.appendChild(face);
+  appMain.appendChild(wrap);
 
   startTickLoop(function(now) {
     renderClockTime(face, get12Hour(now), now.getMinutes(), now.getSeconds(), realClockOpts(now));
@@ -431,6 +442,7 @@ function enterMatch() {
 
   const realFace = buildClockFace({ showSeconds: true, sizeClass: 'clock-face--real' });
   const manualFace = buildClockFace({ showSeconds: false, sizeClass: 'clock-face--manual' });
+  enableSpeakOnTap(realFace);
 
   // Stack both clocks left-aligned so HH lines up under HH and MM under MM.
   // (Centering each face independently would offset the narrower manual clock.)
@@ -507,7 +519,7 @@ function enterMatch() {
   });
 
   return {
-    teardown: function() { stopTickLoop(); }
+    teardown: function() { stopTickLoop(); cancelSpeech(); }
   };
 }
 
@@ -648,6 +660,7 @@ function enterNext() {
   wrap.appendChild(prompt);
 
   const realFace = buildClockFace({ showSeconds: true, sizeClass: 'clock-face--real' });
+  enableSpeakOnTap(realFace);
   wrap.appendChild(realFace);
 
   const optRow = document.createElement('div');
@@ -757,6 +770,7 @@ function enterNext() {
   return {
     teardown: function() {
       stopTickLoop();
+      cancelSpeech();
       thumbsDown.hide();
     },
     revealAndRoll: revealAndRoll,

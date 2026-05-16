@@ -118,6 +118,35 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  .clock-face--speakable.is-speaking {
+    animation: clock-speak-pulse 0.75s ease-out;
+  }
+
+  @keyframes clock-speak-pulse {
+    0% {
+      box-shadow:
+        inset 0 0 18px rgba(0, 0, 0, 0.55),
+        0 6px 24px rgba(0, 0, 0, 0.45),
+        0 0 0 0 rgba(255, 138, 76, 0);
+    }
+    35% {
+      box-shadow:
+        inset 0 0 18px rgba(0, 0, 0, 0.55),
+        0 6px 24px rgba(0, 0, 0, 0.45),
+        0 0 26px 4px rgba(255, 138, 76, 0.6);
+    }
+    100% {
+      box-shadow:
+        inset 0 0 18px rgba(0, 0, 0, 0.55),
+        0 6px 24px rgba(0, 0, 0, 0.45),
+        0 0 0 0 rgba(255, 138, 76, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .clock-face--speakable.is-speaking { animation: none; }
+  }
+
   .clock-face--big {
     padding: clamp(16px, 4vw, 30px) clamp(18px, 4vw, 36px);
   }

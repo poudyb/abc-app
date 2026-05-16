@@ -64,3 +64,39 @@ function normalizeSameAsStats(parsed) {
     usedShapes: !!parsed.usedShapes
   };
 }
+
+function createClockStats() {
+  return {
+    matchSuccesses: 0,
+    quizCorrect: 0,
+    quizWrong: 0,
+    quizStruggled: [],
+    nextCorrect: 0,
+    nextWrong: 0,
+    nextStruggled: [],
+    usedWatch: false,
+    usedMatch: false,
+    usedQuiz: false,
+    usedNext: false
+  };
+}
+
+function normalizeClockStats(parsed) {
+  const defaults = createClockStats();
+  if (!parsed || typeof parsed !== 'object') return defaults;
+  return {
+    ...defaults,
+    ...parsed,
+    matchSuccesses: typeof parsed.matchSuccesses === 'number' ? parsed.matchSuccesses : defaults.matchSuccesses,
+    quizCorrect: typeof parsed.quizCorrect === 'number' ? parsed.quizCorrect : defaults.quizCorrect,
+    quizWrong: typeof parsed.quizWrong === 'number' ? parsed.quizWrong : defaults.quizWrong,
+    quizStruggled: Array.isArray(parsed.quizStruggled) ? parsed.quizStruggled : [],
+    nextCorrect: typeof parsed.nextCorrect === 'number' ? parsed.nextCorrect : defaults.nextCorrect,
+    nextWrong: typeof parsed.nextWrong === 'number' ? parsed.nextWrong : defaults.nextWrong,
+    nextStruggled: Array.isArray(parsed.nextStruggled) ? parsed.nextStruggled : [],
+    usedWatch: !!parsed.usedWatch,
+    usedMatch: !!parsed.usedMatch,
+    usedQuiz: !!parsed.usedQuiz,
+    usedNext: !!parsed.usedNext
+  };
+}

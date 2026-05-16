@@ -87,5 +87,20 @@ const ACTIVITIES = [
     sessionKey: 'ariaSameAsSession',
     statsKey: 'ariaSameAsStats',
     defaultStats: function() { return createSameAsStats(); }
+  },
+  {
+    id: 'clock',
+    href: 'clock.html',
+    title: 'Clock',
+    hint: 'Watch the time tick!',
+    tileClass: 'game-tile--clock',
+    artClasses: 'game-tile__art game-tile__art--clock-digits',
+    artHtml:
+      '<span class="game-tile__art__digit">1</span>' +
+      '<span class="game-tile__art__digit">2</span>' +
+      '<span class="game-tile__art__digit">3</span>',
+    sessionKey: 'ariaClockSession',
+    statsKey: 'ariaClockStats',
+    defaultStats: function() { return createClockStats(); }
   }
 ];

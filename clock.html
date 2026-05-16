@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Clock — Aria's Playroom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/clock.css">
+</head>
+<body>
+
+<div id="play-timer" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<div id="session-end-overlay" aria-modal="true" role="dialog" aria-labelledby="session-end-title" aria-hidden="true">
+  <div class="session-end-card">
+    <h2 id="session-end-title">Time's up!</h2>
+    <p class="session-end-sub">Here's how your clock time went!</p>
+    <div class="session-end-stats" id="session-end-stats"></div>
+    <a href="index.html" class="session-end-home" id="session-end-home">Back to home</a>
+  </div>
+</div>
+
+<a href="index.html" class="home-btn" id="link-home" aria-label="Back to games">← Home</a>
+
+<div id="mode-buttons">
+  <button type="button" class="mode-btn active" data-mode="watch">Watch</button>
+  <button type="button" class="mode-btn" data-mode="match">Match</button>
+  <button type="button" class="mode-btn" data-mode="quiz">Quiz</button>
+  <button type="button" class="mode-btn" data-mode="next">Next</button>
+</div>
+
+<main id="app-main"></main>
+
+<div id="thumbs-down" aria-hidden="true">👎</div>
+
+<script src="shared/no-pinch.js"></script>
+<script src="shared/feedback.js"></script>
+<script src="shared/stats.js"></script>
+<script src="shared/speech.js"></script>
+<script src="shared/summary.js"></script>
+<script src="shared/portal-storage.js"></script>
+<script src="shared/session.js"></script>
+<script src="scripts/clock-page.js"></script>
+</body>
+</html>

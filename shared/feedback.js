@@ -55,7 +55,26 @@ function createAudioFeedback() {
     osc.stop(ctx.currentTime + 0.35);
   }
 
-  return { getAudioCtx, playChime, playBuzzer };
+  function playMatchTone() {
+    const ctx = getAudioCtx();
+    const root = 523.25;
+    const third = 659.25;
+    const fifth = 783.99;
+    [root, third, fifth].forEach(function(freq) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.value = 0.08;
+      gain.gain.setTargetAtTime(0, ctx.currentTime + 0.32, 0.04);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.55);
+    });
+  }
+
+  return { getAudioCtx, playChime, playBuzzer, playMatchTone };
 }
 
 function setupInteractionUnlock(callbacks = []) {

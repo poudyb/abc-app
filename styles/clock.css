@@ -113,6 +113,11 @@
     transform: scale(1);
   }
 
+  .clock-face--speakable {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   .clock-face--big {
     padding: clamp(16px, 4vw, 30px) clamp(18px, 4vw, 36px);
   }

@@ -391,16 +391,33 @@ function setMode(name) {
 function enterWatch() {
   const wrap = document.createElement('div');
   wrap.className = 'watch-wrap';
-  const face = buildClockFace({ showSeconds: true, sizeClass: 'clock-face--real clock-face--big' });
+  const face = buildClockFace({ showSeconds: true, sizeClass: 'clock-face--real clock-face--big clock-face--speakable' });
+  face.setAttribute('role', 'button');
+  face.setAttribute('tabindex', '0');
+  face.setAttribute('aria-label', 'Tap to hear the time');
   wrap.appendChild(face);
   appMain.appendChild(wrap);
+
+  function speakNow() {
+    if (session.isSessionEnded()) return;
+    const now = new Date();
+    speakText(timeToWords(get12Hour(now), now.getMinutes()), { rate: 0.88 });
+  }
+
+  face.addEventListener('click', speakNow);
+  face.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Enter' || ev.key === ' ') {
+      ev.preventDefault();
+      speakNow();
+    }
+  });
 
   startTickLoop(function(now) {
     renderClockTime(face, get12Hour(now), now.getMinutes(), now.getSeconds(), realClockOpts(now));
   });
 
   return {
-    teardown: function() { stopTickLoop(); }
+    teardown: function() { stopTickLoop(); cancelSpeech(); }
   };
 }
 

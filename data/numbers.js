@@ -8,8 +8,21 @@ const NUMBER_WORDS = {
   '6': 'six',
   '7': 'seven',
   '8': 'eight',
-  '9': 'nine'
+  '9': 'nine',
+  '10': 'ten',
+  '11': 'eleven',
+  '12': 'twelve',
+  '13': 'thirteen',
+  '14': 'fourteen',
+  '15': 'fifteen',
+  '16': 'sixteen',
+  '17': 'seventeen',
+  '18': 'eighteen',
+  '19': 'nineteen',
+  '20': 'twenty'
 };
+
+const NUMBERS_CHASE_MAX_VALUE = 20;
 
 const LEARNING_SYMBOLS_CONFIG = {
   items: '0123456789'.split(''),
@@ -35,5 +48,11 @@ const LEARNING_SYMBOLS_CONFIG = {
   },
   speakItem: function(item) {
     return NUMBER_WORDS[item] || item;
+  },
+  chasePool: function(difficulty) {
+    const highest = Math.min(9 + difficulty, NUMBERS_CHASE_MAX_VALUE);
+    const pool = [];
+    for (let n = 0; n <= highest; n++) pool.push(String(n));
+    return pool;
   }
 };

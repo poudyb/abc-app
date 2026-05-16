@@ -157,6 +157,8 @@ activity = createCollectionActivity({
       fontSize: Math.max(10, 18 - count)
     };
   },
+  chasePool: SYMBOL_CONFIG.chasePool,
+  speakChase: function(item) { speakChar(item); },
   thumbsDown,
   confetti: { colors: RAINBOW_PALETTE },
   modeSessionKey: MODE_SESSION_KEY,

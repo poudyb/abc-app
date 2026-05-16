@@ -12,6 +12,8 @@ function createCollectionActivity(options) {
     createChaseElement,
     sizeChaseElement,
     getChaseParams,
+    chasePool,
+    speakChase,
     gridQuizClass,
     thumbsDown,
     confetti,
@@ -36,7 +38,7 @@ function createCollectionActivity(options) {
   let chaseDifficulty = 0;
   let chaseItems = [];
   let chaseAnimId = null;
-  let chaseTargetIndex = -1;
+  let chaseTargetItem = null;
   let chasePaused = false;
   let chaseRepeatId = null;
   let lastFrameTime = 0;
@@ -46,7 +48,18 @@ function createCollectionActivity(options) {
   }
 
   function chaseTarget() {
-    return chaseTargetIndex >= 0 ? items[chaseTargetIndex] : null;
+    return chaseTargetItem;
+  }
+
+  function promptChaseTarget() {
+    if (chaseTargetItem == null) return;
+    if (speakChase) {
+      speakChase(chaseTargetItem);
+      return;
+    }
+    if (!promptItem) return;
+    const idx = items.indexOf(chaseTargetItem);
+    if (idx >= 0) promptItem(idx);
   }
 
   function setMode(newMode) {
@@ -152,7 +165,8 @@ function createCollectionActivity(options) {
     chaseItems = [];
 
     const params = getChaseParams(chaseDifficulty);
-    const indices = items.map(function(_, i) { return i; });
+    const pool = chasePool ? chasePool(chaseDifficulty) : items;
+    const indices = pool.map(function(_, i) { return i; });
     const count = Math.min(params.count, indices.length);
     const shuffled = [];
     for (let i = 0; i < count; i++) {
@@ -162,14 +176,14 @@ function createCollectionActivity(options) {
       indices[j] = tmp;
       shuffled.push(indices[i]);
     }
-    chaseTargetIndex = shuffled[Math.floor(Math.random() * shuffled.length)];
+    chaseTargetItem = pool[shuffled[Math.floor(Math.random() * shuffled.length)]];
 
     shuffled.forEach(function(idx, position) {
-      const item = items[idx];
+      const item = pool[idx];
       const el = createChaseElement(item, position);
       sizeChaseElement(el, params);
       chaseArena.appendChild(el);
-      chaseItems.push({ el, item, index: idx, x: 0, y: 0, vx: 0, vy: 0, w: 0, h: 0 });
+      chaseItems.push({ el, item, x: 0, y: 0, vx: 0, vy: 0, w: 0, h: 0 });
     });
 
     chaseItems.forEach(function(entry) {
@@ -182,10 +196,10 @@ function createCollectionActivity(options) {
       entry.vy = Math.sin(angle) * params.speed;
     });
 
-    if (promptItem) promptItem(chaseTargetIndex);
+    promptChaseTarget();
     chaseRepeatId = setInterval(function() {
       if (chasePaused || session.isSessionEnded()) return;
-      if (promptItem) promptItem(chaseTargetIndex);
+      promptChaseTarget();
     }, chaseRepromptMs);
     lastFrameTime = performance.now();
     chaseAnimId = requestAnimationFrame(updateChase);

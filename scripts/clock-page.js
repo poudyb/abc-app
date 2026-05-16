@@ -161,11 +161,9 @@ function renderClockTime(face, h, m, s, opts) {
   const slots = face._slots;
   const mm = formatTwo(m);
   if (h < 10) {
-    slots.h1.style.display = 'none';
     setDigitState(slots.h1, []);
     renderDigit(slots.h2, h);
   } else {
-    slots.h1.style.display = '';
     renderDigit(slots.h1, Math.floor(h / 10));
     renderDigit(slots.h2, h % 10);
   }
@@ -451,18 +449,8 @@ function enterMatch() {
     const h = get12Hour(now);
     const m = now.getMinutes();
     const mm = formatTwo(m);
-    const singleDigitHour = h < 10;
-    if (singleDigitHour) {
-      manualFace._slots.h1.style.display = 'none';
-      if (manualState.h1.size > 0) {
-        manualState.h1.clear();
-        setDigitState(manualFace._slots.h1, manualState.h1);
-      }
-    } else {
-      manualFace._slots.h1.style.display = '';
-    }
     const targets = {
-      h1: singleDigitHour ? new Set() : new Set(segsForDigitArray(Math.floor(h / 10))),
+      h1: h < 10 ? new Set() : new Set(segsForDigitArray(Math.floor(h / 10))),
       h2: new Set(segsForDigitArray(h % 10)),
       m1: new Set(segsForDigitArray(Number(mm[0]))),
       m2: new Set(segsForDigitArray(Number(mm[1])))

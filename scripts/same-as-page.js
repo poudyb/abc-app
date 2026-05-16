@@ -11,6 +11,8 @@ const CHOICES = [
 
 const PROMPT_SAY = 'Which one is the same as this?';
 const CONFETTI_HEX = ['#00838f', '#26c6da', '#b2ebf2', '#e53935', '#43a047', '#8e24aa', '#ff9800', '#1e88e5'];
+const SAME_AS_SESSION_KEY = 'ariaSameAsSession';
+const SAME_AS_MODES = ['animals', 'shapes'];
 
 let category = 'animals';
 let pool = ANIMALS;
@@ -46,7 +48,7 @@ function renderSummary(board, stats) {
 }
 
 const session = createTimedSession({
-  sessionKey: 'ariaSameAsSession',
+  sessionKey: SAME_AS_SESSION_KEY,
   statsKey: 'ariaSameAsStats',
   defaultStats: createSameAsStats,
   normalizeStats: normalizeSameAsStats,
@@ -99,7 +101,9 @@ function struggleIdForIndex(index) {
 
 function setCategory(nextCategory) {
   if (session.isSessionEnded()) return;
+  if (SAME_AS_MODES.indexOf(nextCategory) === -1) nextCategory = 'animals';
   category = nextCategory;
+  rememberSessionMode(SAME_AS_SESSION_KEY, category);
   pool = category === 'animals' ? ANIMALS : SHAPES;
   catBtns.forEach(function(btn) {
     btn.classList.toggle('active', btn.dataset.cat === category);
@@ -217,7 +221,7 @@ catBtns.forEach(function(btn) {
 
 session.initPlaySession();
 session.startSessionTimerIfNeeded();
-setCategory('animals');
+setCategory(readSessionMode(SAME_AS_SESSION_KEY, 'animals'));
 
 document.getElementById('link-home').addEventListener('click', function() {
   stopMatchGame();

@@ -47,6 +47,7 @@ function createTimedSession(options) {
     try {
       sessionStorage.removeItem(sessionKey);
       sessionStorage.removeItem(statsKey);
+      sessionStorage.removeItem(sessionKey + ':mode');
       if (alsoClearPortalTimer) {
         sessionStorage.removeItem(PORTAL_TIMER_KEY);
         sessionStorage.removeItem(PLAY_LIMIT_UI_KEY);
@@ -178,4 +179,18 @@ function createTimedSession(options) {
     shouldTrackStats,
     startSessionTimerIfNeeded
   };
+}
+
+function readSessionMode(sessionKey, fallback) {
+  try {
+    return sessionStorage.getItem(sessionKey + ':mode') || fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
+function rememberSessionMode(sessionKey, mode) {
+  try {
+    sessionStorage.setItem(sessionKey + ':mode', mode);
+  } catch (_) {}
 }

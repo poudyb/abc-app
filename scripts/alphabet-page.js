@@ -10,6 +10,7 @@ const isTouch = window.matchMedia('(pointer: coarse)').matches;
 const SYMBOL_CONFIG = LEARNING_SYMBOLS_CONFIG;
 const FREEPLAY_HINT = isTouch ? SYMBOL_CONFIG.touchHint : SYMBOL_CONFIG.keyboardHint;
 const SYMBOL_ITEMS = SYMBOL_CONFIG.items;
+const MODE_SESSION_KEY = SYMBOL_CONFIG.sessionKey;
 
 let lastColor = '';
 let fadeTimer = null;
@@ -158,6 +159,7 @@ activity = createCollectionActivity({
   },
   thumbsDown,
   confetti: { colors: RAINBOW_PALETTE },
+  modeSessionKey: MODE_SESSION_KEY,
   dom: {
     modeBtns,
     grid: touchGrid,
@@ -182,7 +184,7 @@ activity = createCollectionActivity({
 
 session.initPlaySession();
 session.startSessionTimerIfNeeded();
-activity.setMode('freeplay');
+activity.setMode(readSessionMode(MODE_SESSION_KEY, 'freeplay'));
 
 document.addEventListener('keydown', function(event) {
   if (session.isSessionEnded()) return;
@@ -195,7 +197,7 @@ window.addEventListener('pagehide', stopSymbolsGame);
 window.addEventListener('pageshow', function(event) {
   if (event.persisted) {
     stopSymbolsGame();
-    activity.setMode('freeplay');
+    activity.setMode(activity.getMode());
   }
 });
 

@@ -16,6 +16,7 @@ function createCollectionActivity(options) {
     thumbsDown,
     confetti,
     dom,
+    modeSessionKey,
     onFreeplayInteract,
     onQuizStart,
     onModeEnter
@@ -23,6 +24,7 @@ function createCollectionActivity(options) {
 
   const { audio, showCelebrationEmojis, spawnConfetti } = feedback;
   const { modeBtns, grid, modeHint, chaseArena, viewFreeplay, appMain, quizTop, quizReplayBtn } = dom;
+  const modeNames = Array.prototype.map.call(modeBtns, function(btn) { return btn.dataset.mode; });
 
   const chaseHitMargin = 30;
   const chaseRepromptMs = 5000;
@@ -49,10 +51,12 @@ function createCollectionActivity(options) {
 
   function setMode(newMode) {
     if (session.isSessionEnded()) return;
+    if (modeNames.indexOf(newMode) === -1) newMode = 'freeplay';
     if (mode === 'chase') stopChase();
     if (stopPrompt) stopPrompt();
 
     mode = newMode;
+    if (modeSessionKey) rememberSessionMode(modeSessionKey, mode);
     modeBtns.forEach(function(btn) {
       btn.classList.toggle('active', btn.dataset.mode === mode);
     });

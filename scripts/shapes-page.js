@@ -7,6 +7,7 @@ const quizTop = document.getElementById('quiz-top');
 const quizReplayBtn = document.getElementById('quiz-replay-btn');
 const chaseArena = document.getElementById('chase-arena');
 const thumbsDownEl = document.getElementById('thumbs-down');
+const MODE_SESSION_KEY = 'ariaShapesSession';
 
 let activity = null;
 
@@ -64,7 +65,7 @@ function stopShapesGame() {
 }
 
 const session = createTimedSession({
-  sessionKey: 'ariaShapesSession',
+  sessionKey: MODE_SESSION_KEY,
   statsKey: 'ariaShapesStats',
   defaultStats: function() { return createModeStats('freeShapes'); },
   normalizeStats: function(parsed) { return normalizeModeStats(parsed, 'freeShapes', ['freeAnimals']); },
@@ -142,6 +143,7 @@ activity = createCollectionActivity({
   gridQuizClass: 'shape-grid--quiz',
   thumbsDown,
   confetti: { colors: RAINBOW_PALETTE },
+  modeSessionKey: MODE_SESSION_KEY,
   dom: {
     modeBtns,
     viewFreeplay,
@@ -156,7 +158,7 @@ activity = createCollectionActivity({
 
 session.initPlaySession();
 session.startSessionTimerIfNeeded();
-activity.setMode('freeplay');
+activity.setMode(readSessionMode(MODE_SESSION_KEY, 'freeplay'));
 
 document.getElementById('link-home').addEventListener('click', function() {
   stopShapesGame();
@@ -169,5 +171,5 @@ document.getElementById('session-end-home').addEventListener('click', function()
 
 window.addEventListener('pagehide', stopShapesGame);
 window.addEventListener('pageshow', function(event) {
-  if (event.persisted) activity.reset();
+  if (event.persisted) activity.setMode(activity.getMode());
 });

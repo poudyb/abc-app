@@ -7,6 +7,7 @@ const quizTop = document.getElementById('quiz-top');
 const quizReplayBtn = document.getElementById('quiz-replay-btn');
 const chaseArena = document.getElementById('chase-arena');
 const thumbsDownEl = document.getElementById('thumbs-down');
+const MODE_SESSION_KEY = 'ariaColorsSession';
 
 let activity = null;
 
@@ -64,7 +65,7 @@ function stopColorsGame() {
 }
 
 const session = createTimedSession({
-  sessionKey: 'ariaColorsSession',
+  sessionKey: MODE_SESSION_KEY,
   statsKey: 'ariaColorsStats',
   defaultStats: function() { return createModeStats('freeColors'); },
   normalizeStats: function(parsed) { return normalizeModeStats(parsed, 'freeColors', ['freeShapes']); },
@@ -144,6 +145,7 @@ activity = createCollectionActivity({
     colors: COLOR_CONFETTI_HEX,
     count: 50
   },
+  modeSessionKey: MODE_SESSION_KEY,
   dom: {
     modeBtns,
     viewFreeplay,
@@ -158,7 +160,7 @@ activity = createCollectionActivity({
 
 session.initPlaySession();
 session.startSessionTimerIfNeeded();
-activity.setMode('freeplay');
+activity.setMode(readSessionMode(MODE_SESSION_KEY, 'freeplay'));
 
 document.getElementById('link-home').addEventListener('click', function() {
   stopColorsGame();
@@ -171,5 +173,5 @@ document.getElementById('session-end-home').addEventListener('click', function()
 
 window.addEventListener('pagehide', stopColorsGame);
 window.addEventListener('pageshow', function(event) {
-  if (event.persisted) activity.reset();
+  if (event.persisted) activity.setMode(activity.getMode());
 });

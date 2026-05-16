@@ -128,6 +128,7 @@ function navigateToActivity(activity) {
   const timing = resolveEndsAtForPortalNavigation(resolveMinutes());
 
   try {
+    sessionStorage.removeItem(activity.sessionKey + ':mode');
     sessionStorage.setItem(activity.sessionKey, JSON.stringify({
       endsAt: timing.endsAt,
       startedAt: timing.startedAt

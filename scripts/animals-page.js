@@ -8,6 +8,7 @@ const quizReplayBtn = document.getElementById('quiz-replay-btn');
 const animalSoundsVideo = document.getElementById('animal-sounds-video');
 const chaseArena = document.getElementById('chase-arena');
 const thumbsDownEl = document.getElementById('thumbs-down');
+const MODE_SESSION_KEY = 'ariaAnimalsSession';
 
 let videoSegmentTimeUpdate = null;
 let videoSegmentSeekedHandler = null;
@@ -69,7 +70,7 @@ function stopAnimalsGame() {
 }
 
 const session = createTimedSession({
-  sessionKey: 'ariaAnimalsSession',
+  sessionKey: MODE_SESSION_KEY,
   statsKey: 'ariaAnimalsStats',
   defaultStats: function() { return createModeStats('freeAnimals'); },
   normalizeStats: function(parsed) { return normalizeModeStats(parsed, 'freeAnimals'); },
@@ -272,6 +273,7 @@ activity = createCollectionActivity({
   gridQuizClass: 'animal-grid--quiz',
   thumbsDown,
   confetti: { colors: RAINBOW_PALETTE },
+  modeSessionKey: MODE_SESSION_KEY,
   dom: {
     modeBtns,
     viewFreeplay,
@@ -286,7 +288,7 @@ activity = createCollectionActivity({
 
 session.initPlaySession();
 session.startSessionTimerIfNeeded();
-activity.setMode('freeplay');
+activity.setMode(readSessionMode(MODE_SESSION_KEY, 'freeplay'));
 
 document.getElementById('link-home').addEventListener('click', function() {
   stopAnimalsGame();
@@ -299,5 +301,5 @@ document.getElementById('session-end-home').addEventListener('click', function()
 
 window.addEventListener('pagehide', stopAnimalsGame);
 window.addEventListener('pageshow', function(event) {
-  if (event.persisted) activity.reset();
+  if (event.persisted) activity.setMode(activity.getMode());
 });

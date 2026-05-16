@@ -47,6 +47,8 @@ const NUMBER_WORDS_ONES = [
 const NUMBER_WORDS_TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty'];
 
 const CONFETTI_HEX = ['#ff7043', '#ffb74d', '#80deea', '#64b5f6', '#ba68c8', '#aed581'];
+const CLOCK_SESSION_KEY = 'ariaClockSession';
+const CLOCK_MODES = ['watch', 'match', 'quiz', 'next'];
 
 function numberToWords(n) {
   if (n < 20) return NUMBER_WORDS_ONES[n];
@@ -347,7 +349,7 @@ function stopClockGame() {
 }
 
 const session = createTimedSession({
-  sessionKey: 'ariaClockSession',
+  sessionKey: CLOCK_SESSION_KEY,
   statsKey: 'ariaClockStats',
   defaultStats: createClockStats,
   normalizeStats: normalizeClockStats,
@@ -357,8 +359,10 @@ const session = createTimedSession({
 
 function setMode(name) {
   if (session.isSessionEnded()) return;
+  if (CLOCK_MODES.indexOf(name) === -1) name = 'watch';
   if (currentMode === name && activeMode != null) return;
   currentMode = name;
+  rememberSessionMode(CLOCK_SESSION_KEY, currentMode);
   document.querySelectorAll('.mode-btn').forEach(function(btn) {
     btn.classList.toggle('active', btn.dataset.mode === name);
   });
@@ -749,7 +753,7 @@ document.querySelectorAll('.mode-btn').forEach(function(btn) {
 
 session.initPlaySession();
 session.startSessionTimerIfNeeded();
-setMode('watch');
+setMode(readSessionMode(CLOCK_SESSION_KEY, 'watch'));
 
 document.getElementById('link-home').addEventListener('click', function() {
   stopClockGame();

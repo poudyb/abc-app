@@ -181,7 +181,8 @@ function renderClockTime(face, h, m, s, opts) {
     slots.m2.style.setProperty('--led-hue', String(minuteHue));
     if (slots.s1) slots.s1.style.setProperty('--led-hue', String(secondHue));
     if (slots.s2) slots.s2.style.setProperty('--led-hue', String(secondHue));
-    const colonOpacity = 0.35 + 0.65 * Math.abs(Math.cos(mf * Math.PI));
+    const colonPhase = ((secondsVal % 2) + mf) / 2;
+    const colonOpacity = 0.35 + 0.65 * Math.abs(Math.cos(colonPhase * Math.PI));
     face._colons.forEach(function(c) {
       c.style.setProperty('--colon-opacity', String(colonOpacity));
     });

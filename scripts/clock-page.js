@@ -219,6 +219,12 @@ function shuffleInPlace(arr) {
 function randomHour() { return Math.floor(Math.random() * 12) + 1; }
 function randomMinute() { return Math.floor(Math.random() * 60); }
 
+function minutesShareDigit(a, b) {
+  const da = formatTwo(a);
+  const db = formatTwo(b);
+  return da[0] === db[0] || da[0] === db[1] || da[1] === db[0] || da[1] === db[1];
+}
+
 function keyForTime(h, m) { return h + ':' + (m < 10 ? '0' + m : m); }
 
 function parseTimeKey(key) {
@@ -565,15 +571,29 @@ function enterQuiz() {
     const m = randomMinute();
     target = { h: h, m: m };
 
-    let sameHourMinute;
-    do { sameHourMinute = randomMinute(); } while (sameHourMinute === m);
-    let diffHour;
-    do { diffHour = randomHour(); } while (diffHour === h);
+    function pickWrong(exclude) {
+      let wh, wm;
+      let tries = 0;
+      do {
+        wh = randomHour();
+        wm = randomMinute();
+        tries++;
+        if (tries > 200) break;
+      } while (
+        wh === h ||
+        minutesShareDigit(wm, m) ||
+        exclude.some(function(e) { return e.h === wh && e.m === wm; })
+      );
+      return { h: wh, m: wm };
+    }
+
+    const wrong1 = pickWrong([]);
+    const wrong2 = pickWrong([wrong1]);
 
     const opts = shuffleInPlace([
       { h: h, m: m, correct: true },
-      { h: h, m: sameHourMinute, correct: false },
-      { h: diffHour, m: m, correct: false }
+      { h: wrong1.h, m: wrong1.m, correct: false },
+      { h: wrong2.h, m: wrong2.m, correct: false }
     ]);
 
     opts.forEach(function(opt) {

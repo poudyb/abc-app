@@ -146,7 +146,7 @@ playLimit.addEventListener('change', function() {
 customMinutes.addEventListener('input', persistPlayLimitUi);
 customMinutes.addEventListener('change', persistPlayLimitUi);
 
-function updateClockTile() {
+function tickClockTile() {
   const tile = document.getElementById('tile-clock');
   if (!tile) return;
   const art = tile.querySelector('.game-tile__art');
@@ -160,9 +160,10 @@ function updateClockTile() {
     '<span class="game-tile__art__digit">' + h + '</span>' +
     '<span class="game-tile__art__digit game-tile__art__digit--colon">:</span>' +
     '<span class="game-tile__art__digit">' + mm + '</span>';
+  const msUntilNextMinute = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
+  setTimeout(tickClockTile, msUntilNextMinute);
 }
 
 renderTiles();
-updateClockTile();
-setInterval(updateClockTile, 15000);
+tickClockTile();
 restorePlayLimitUiFromStorage();

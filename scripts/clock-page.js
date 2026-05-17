@@ -178,9 +178,12 @@ function renderClockTime(face, h, m, s, opts) {
   if (opts && opts.colorCycling) {
     const mf = opts.msFraction || 0;
     const secondsVal = s == null ? 0 : s;
-    const hourHue = (h * 30) % 360;
-    const minuteHue = (m * 6 + 90) % 360;
-    const secondHue = (secondsVal * 6 + 200) % 360;
+    // 90-min hue cycle (5400 s) anchored to midnight. Minute hue = seconds hue at s=0
+    // of the current minute; hour hue = seconds hue at m=0, s=0 of the current hour.
+    const totalSec = h * 3600 + m * 60 + secondsVal;
+    const secondHue = (totalSec % 5400) * 360 / 5400;
+    const minuteHue = ((h * 3600 + m * 60) % 5400) * 360 / 5400;
+    const hourHue = ((h * 3600) % 5400) * 360 / 5400;
     slots.h1.style.setProperty('--led-hue', String(hourHue));
     slots.h2.style.setProperty('--led-hue', String(hourHue));
     slots.m1.style.setProperty('--led-hue', String(minuteHue));

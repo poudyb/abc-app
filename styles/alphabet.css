@@ -79,16 +79,16 @@
     gap: 6px;
   }
   .mode-btn {
-    background: #eee;
-    border: 1px solid #ccc;
+    background: #e0e0e0;
+    border: 1px solid #9e9e9e;
     border-radius: 6px;
     padding: 6px 14px;
     font-size: 14px;
     font-family: system-ui, -apple-system, sans-serif;
-    color: #666;
+    color: #212121;
     cursor: pointer;
   }
-  .mode-btn:hover { background: #ddd; }
+  .mode-btn:hover { background: #bdbdbd; }
   .mode-btn.active {
     background: #1e88e5;
     border-color: #1565c0;

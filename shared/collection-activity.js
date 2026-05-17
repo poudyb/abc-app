@@ -32,7 +32,7 @@ function createCollectionActivity(options) {
   const chaseRepromptMs = 5000;
   const chaseDifficultyMax = 15;
 
-  let mode = 'freeplay';
+  let mode = null;
   let quizTargetIndex = -1;
   let quizLocked = false;
   let chaseDifficulty = 0;
@@ -65,6 +65,7 @@ function createCollectionActivity(options) {
   function setMode(newMode) {
     if (session.isSessionEnded()) return;
     if (modeNames.indexOf(newMode) === -1) newMode = 'freeplay';
+    if (mode === newMode) return;
     if (mode === 'chase') stopChase();
     if (stopPrompt) stopPrompt();
 

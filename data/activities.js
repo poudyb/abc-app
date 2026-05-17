@@ -96,9 +96,9 @@ const ACTIVITIES = [
     tileClass: 'game-tile--clock',
     artClasses: 'game-tile__art game-tile__art--clock-digits',
     artHtml:
-      '<span class="game-tile__art__digit">1</span>' +
-      '<span class="game-tile__art__digit">2</span>' +
-      '<span class="game-tile__art__digit">3</span>',
+      '<span class="game-tile__art__digit">10</span>' +
+      '<span class="game-tile__art__digit game-tile__art__digit--colon">:</span>' +
+      '<span class="game-tile__art__digit">30</span>',
     sessionKey: 'ariaClockSession',
     statsKey: 'ariaClockStats',
     defaultStats: function() { return createClockStats(); }

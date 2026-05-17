@@ -17,6 +17,7 @@
     font-family: system-ui, -apple-system, sans-serif;
     user-select: none;
     -webkit-user-select: none;
+    touch-action: manipulation;
     background: linear-gradient(180deg, #ede7f6 0%, #e1bee7 38%, #b39ddb 100%);
     padding: 52px 12px 16px;
   }

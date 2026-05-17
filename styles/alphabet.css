@@ -12,6 +12,7 @@
     font-family: system-ui, -apple-system, sans-serif;
     user-select: none;
     -webkit-user-select: none;
+    touch-action: manipulation;
   }
 
   .home-btn {

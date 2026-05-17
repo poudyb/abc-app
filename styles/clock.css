@@ -12,6 +12,7 @@
     font-family: system-ui, -apple-system, sans-serif;
     user-select: none;
     -webkit-user-select: none;
+    touch-action: manipulation;
     background:
       radial-gradient(ellipse at top, #2d3e5e 0%, #1c2c45 60%, #0e1c30 100%);
     color: #e0f2ff;

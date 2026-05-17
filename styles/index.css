@@ -11,6 +11,7 @@
     font-family: "Fredoka", system-ui, sans-serif;
     user-select: none;
     -webkit-user-select: none;
+    touch-action: manipulation;
     background: linear-gradient(165deg, #7c4dff 0%, #ff6ec7 45%, #ffd54f 100%);
   }
 

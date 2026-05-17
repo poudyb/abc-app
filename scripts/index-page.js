@@ -146,5 +146,23 @@ playLimit.addEventListener('change', function() {
 customMinutes.addEventListener('input', persistPlayLimitUi);
 customMinutes.addEventListener('change', persistPlayLimitUi);
 
+function updateClockTile() {
+  const tile = document.getElementById('tile-clock');
+  if (!tile) return;
+  const art = tile.querySelector('.game-tile__art');
+  if (!art) return;
+  const now = new Date();
+  let h = now.getHours() % 12;
+  if (h === 0) h = 12;
+  const m = now.getMinutes();
+  const mm = m < 10 ? '0' + m : String(m);
+  art.innerHTML =
+    '<span class="game-tile__art__digit">' + h + '</span>' +
+    '<span class="game-tile__art__digit game-tile__art__digit--colon">:</span>' +
+    '<span class="game-tile__art__digit">' + mm + '</span>';
+}
+
 renderTiles();
+updateClockTile();
+setInterval(updateClockTile, 15000);
 restorePlayLimitUiFromStorage();
